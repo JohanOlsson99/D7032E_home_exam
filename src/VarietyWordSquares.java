@@ -10,7 +10,7 @@ public class VarietyWordSquares {
     public HashSet<String> dictionaryHash = new HashSet<String>();
     public ArrayList<Player> players = new ArrayList<Player>();
     public boolean scrabbleMode;   
-    boolean test = true;
+    boolean test = false;
     String[][] test55 = new String[][] {{"G","a0"}, {"L","a1"}, {"A","a2"}, {"D","a3"}, {"Y","a4"},
                                         {"R","b0"}, {"E","b1"}, {"S","b2"}, {"T","b3"}, {"E","b4"},
                                         {"O","c0"}, {"X","c1"}, {"A","c2"}, {"R","c3"}, {"A","c4"},
@@ -326,6 +326,7 @@ public class VarietyWordSquares {
     
     public static void main(String argv[]) {
         VarietyWordSquares game = new VarietyWordSquares(argv);
+        // game.gameSetup(-1, -1, new Square[1][1]);
     }
     
     public VarietyWordSquares(String[] params) {
@@ -427,6 +428,7 @@ public class VarietyWordSquares {
                 }   
             }      
         } else {
+            System.out.println("IN ELSE");
             try {
                 client("127.0.0.1");            
             } catch (Exception e){}
@@ -522,6 +524,7 @@ public class VarietyWordSquares {
             players.add(new Player(i+1, board, true, null, null, null)); //add a bot    
         }
         if(numberPlayers>1)
+            System.out.println("IN LISTENING");
             aSocket = new ServerSocket(2048);
         for(int i=numberOfBots+1; i<numberPlayers+numberOfBots; i++) {
             Socket connectionSocket = aSocket.accept();

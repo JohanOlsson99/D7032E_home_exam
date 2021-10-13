@@ -6,9 +6,23 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Launch VarietyWordSquares",
+            "name": "Launch LetterValueHandler",
             "request": "launch",
-            "mainClass": "VarietyWordSquares",
+            "mainClass": "Handlers.LetterValueHandler",
+            "projectName": "D7032E_home_exam_2b51238f"
+        },
+        {
+            "type": "java",
+            "name": "Launch Board",
+            "request": "launch",
+            "mainClass": "Boards.Board",
+            "projectName": "D7032E_home_exam_2b51238f"
+        },
+        {
+            "type": "java",
+            "name": "Launch GameType",
+            "request": "launch",
+            "mainClass": "GameType",
             "projectName": "D7032E_home_exam_2b51238f"
         },
         {
@@ -16,7 +30,7 @@
             "name": "Launch VarietyWordSquares",
             "request": "launch",
             "mainClass": "VarietyWordSquares",
-            "projectName": "home_exam_7575eff9"
+            "projectName": "D7032E_home_exam_2b51238f"
         }
     ]
 }
