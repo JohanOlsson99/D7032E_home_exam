@@ -6,6 +6,34 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch BoardHandler",
+            "request": "launch",
+            "mainClass": "Handlers.BoardHandler",
+            "projectName": "D7032E_home_exam_38ad042b"
+        },
+        {
+            "type": "java",
+            "name": "Launch WordHandler",
+            "request": "launch",
+            "mainClass": "Handlers.WordHandler",
+            "projectName": "D7032E_home_exam_38ad042b"
+        },
+        {
+            "type": "java",
+            "name": "Launch LetterValueHandler",
+            "request": "launch",
+            "mainClass": "Handlers.LetterValueHandler",
+            "projectName": "D7032E_home_exam_38ad042b"
+        },
+        {
+            "type": "java",
+            "name": "Launch Board",
+            "request": "launch",
+            "mainClass": "Boards.Board",
+            "projectName": "D7032E_home_exam_38ad042b"
+        },
+        {
+            "type": "java",
             "name": "Launch LetterValueHandler",
             "request": "launch",
             "mainClass": "Handlers.LetterValueHandler",

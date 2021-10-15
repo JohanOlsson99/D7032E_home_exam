@@ -1,9 +1,8 @@
 package Boards;
 
-import java.util.Arrays;
-
 import Boards.Errors.*;
 import Handlers.LetterValueHandler;
+
 
 public class Board {
     
@@ -18,20 +17,20 @@ public class Board {
     private Square[][] board;
     private LetterValueHandler letterValueHandler;
 
-    public Board(int width, int height, LetterValueHandler letterValueHandler) {
+    public Board(int width, int height) {
         this.board = new Square[width][height];
         this.newBoard();
-        this.letterValueHandler = letterValueHandler;
+        this.letterValueHandler = LetterValueHandler.getInstance();
     }
 
     private void newBoard() {        
         for (int i = 0; i < this.board.length; i++) {
-            int asciiRowCount = 97;
-            int type = 1;
+            // int asciiRowCount = 97;
+            // int type = 1;
             for (int j = 0; j < this.board[i].length; j++) {
                 this.board[i][j] = new Square();
-                this.board[i][j].setLetter((char) asciiRowCount++);
-                this.board[i][j].setSquareType(type++);
+                // this.board[i][j].setLetter((char) asciiRowCount++);
+                // this.board[i][j].setSquareType(type++);
             } 
         }
     }
@@ -42,41 +41,52 @@ public class Board {
      * @param place what place the new letter should be added to
      * @throws PlaceStringIncorrect if place string is incorrect
      * @throws IndexOutOfBoundsException if place values is incorrect
+     * @throws LetterIncorrectException if letter is incorrect
      * @throws PlaceAlreadyTaken if place is already taken with another letter
      */
     public void updateBoard(char letter, String place) throws 
-            PlaceStringIncorrect, 
+            PlaceStringIncorrectException, 
             IndexOutOfBoundsException, 
-            PlaceAlreadyTaken {
+            PlaceAlreadyTakenException,
+            LetterIncorrectException {
         int row = 0;
         int col = 0;
         // parse the string for row and column index
         String[] placement = (place.contains(" ") ? place.split(" ") : place.split(""));
         if (placement.length != 2) {
-            throw new PlaceStringIncorrect("The placement string format is not correct!");
+            throw new PlaceStringIncorrectException("The placement string format is not correct");
         }
-        row = ((int) placement[0].charAt(0))-97; //ascii code for a
+        row = ((int) Character.toLowerCase(placement[0].charAt(0)))-97; //ascii code for a
+        if (row < 0) {
+            throw new PlaceStringIncorrectException("The character given is wrong");
+        }
         col = Integer.parseInt(placement[1]);
         if (row >= this.board.length) {
             throw new IndexOutOfBoundsException("Character given is to large");
         }
-        for (int i = 0; i < row; i++) {
-            if (col >= this.board[i].length) {
-                throw new IndexOutOfBoundsException("Number given is to large");
-            }
+        if (col >= this.board[0].length) {
+            throw new IndexOutOfBoundsException("Number given is to large");
+        }
+        letter = Character.toUpperCase(letter);
+        if ((letter < 65) || (letter > 90)) {
+            throw new LetterIncorrectException("Letter chosen is not a correct character");
         }
         if (this.board[row][col].getLetter() != '\0') {
-           throw new PlaceAlreadyTaken("Cannot place letter on an already taken spot"); 
-        }
+            throw new PlaceAlreadyTakenException("Cannot place letter on an already taken spot"); 
+         }
         this.board[row][col].setLetter(letter);
     }
 
-    public static void main(String[] args) throws PlaceStringIncorrect, IndexOutOfBoundsException, PlaceAlreadyTaken {
-        LetterValueHandler hand = new LetterValueHandler();
+    public static void main(String[] args) throws PlaceStringIncorrectException, IndexOutOfBoundsException, PlaceAlreadyTakenException, LetterIncorrectException {
+        LetterValueHandler hand = LetterValueHandler.getInstance();
         hand.readFromFile(System.getProperty("user.dir") + "\\data\\letter.txt");
-        Board board = new Board(5, 5, hand);
-        // board.updateBoard('K', "b3");
-        System.out.println(board.toString(true, true));
+        Board board = new Board(5, 5);
+        // board.updateBoard('B', "a3");
+        System.out.println(board.toString(false, false));
+    }
+
+    public Square[][] getBoard() {
+        return this.board;
     }
 
     /**
@@ -127,6 +137,6 @@ public class Board {
             retStr += RESET + "\n\n\t" +REGULAR + " STD \t" + RESET+DOUBLE_LETTER + " DL  \t" + RESET+TRIPLE_LETTER + " TL  \t" + RESET+DOUBLE_WORD + " DW  \t" + RESET+TRIPLE_WORD + " TW  \t" + RESET;
         }
         return retStr + RESET + "\n";
-    }
-    
+    }    
+   
 }

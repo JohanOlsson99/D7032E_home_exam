@@ -5,11 +5,27 @@ import java.io.*;
 
 public class LetterValueHandler {
     private HashMap<Character, Integer> letterValues;
-
-    public LetterValueHandler() {
+    private static LetterValueHandler INSTANCE;
+    
+    private LetterValueHandler() {
         this.letterValues = new HashMap<Character, Integer>();
     }
 
+    /**
+     * creates an instance if no instance exits otherwise does nothing
+     * @return the instance of this class
+     */
+    public static LetterValueHandler getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new LetterValueHandler();
+        }
+        return INSTANCE;
+    }
+
+    /**
+     * 
+     * @param filePath file path to the letter values
+     */
     public void readFromFile(String filePath) {
         FileReader fileReader;
         try {
@@ -23,8 +39,8 @@ public class LetterValueHandler {
                     this.setValue(letters.charAt(i), Integer.parseInt(data[1].replace(" ", "")));
                 }
             }
+            bufferedReader.close();
         } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
@@ -32,15 +48,15 @@ public class LetterValueHandler {
     }
 
     public static void main(String[] args) {
-        LetterValueHandler hand = new LetterValueHandler();
+        LetterValueHandler hand = LetterValueHandler.getInstance();
         hand.readFromFile(System.getProperty("user.dir") + "\\data\\letter.txt");
         System.out.println(hand.letterValues.toString());
     }
 
     /**
      * 
-     * @param letter char to get value for
-     * @return returns the value for a char, if char not found, returns 0
+     * @param letter Char to get value for
+     * @return Returns the value for a char, if char not found, returns 0
      */
     public int getValue(char letter) {
         letter = Character.toUpperCase(letter);
@@ -53,9 +69,13 @@ public class LetterValueHandler {
         return value;
     }
 
+    /**
+     * 
+     * @param key Character to be stored in a hashmap
+     * @param value Value which the character gives as points
+     */
     public void setValue(char key, int value) {
-        System.out.println("key: " + key + " value: " + value);
-        this.letterValues.put(key, value);
+        this.letterValues.put(Character.toUpperCase(key), value);
     }
     
 }
