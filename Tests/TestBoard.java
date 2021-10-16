@@ -1,4 +1,5 @@
 import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -7,6 +8,7 @@ import Boards.Board;
 import Boards.Errors.LetterIncorrectException;
 import Boards.Errors.PlaceAlreadyTakenException;
 import Boards.Errors.PlaceStringIncorrectException;
+import Boards.Errors.WrongBoardSizeException;
 import Handlers.LetterValueHandler;
 
 
@@ -40,7 +42,8 @@ public class TestBoard {
             IndexOutOfBoundsException,
             PlaceStringIncorrectException,
             PlaceAlreadyTakenException,
-            LetterIncorrectException {
+            LetterIncorrectException,
+            WrongBoardSizeException {
         Board board = new Board(3, 3);
         this.fillBoard3x3(board);
     }
@@ -50,7 +53,8 @@ public class TestBoard {
             IndexOutOfBoundsException,
             PlaceStringIncorrectException,
             PlaceAlreadyTakenException,
-            LetterIncorrectException {
+            LetterIncorrectException,
+            WrongBoardSizeException {
         Board board = new Board(3, 3);
         this.fillBoard3x3(board);
         board.updateBoard('G', "b1");
@@ -61,7 +65,8 @@ public class TestBoard {
             IndexOutOfBoundsException,
             PlaceStringIncorrectException,
             PlaceAlreadyTakenException,
-            LetterIncorrectException {
+            LetterIncorrectException,
+            WrongBoardSizeException {
         Board board = new Board(3, 3);
         this.fillBoard3x3(board);
         board.updateBoard('G', "b3");
@@ -72,7 +77,8 @@ public class TestBoard {
             IndexOutOfBoundsException,
             PlaceStringIncorrectException,
             PlaceAlreadyTakenException,
-            LetterIncorrectException {
+            LetterIncorrectException,
+            WrongBoardSizeException {
         Board board = new Board(3, 3);
         this.fillBoard3x3(board);
         board.updateBoard('G', "d3");
@@ -83,7 +89,8 @@ public class TestBoard {
             IndexOutOfBoundsException,
             PlaceStringIncorrectException,
             PlaceAlreadyTakenException,
-            LetterIncorrectException {
+            LetterIncorrectException,
+            WrongBoardSizeException {
         Board board = new Board(3, 3);
         this.fillBoard3x3(board);
         board.updateBoard('G', "@3");
@@ -94,7 +101,8 @@ public class TestBoard {
             IndexOutOfBoundsException,
             PlaceStringIncorrectException,
             PlaceAlreadyTakenException,
-            LetterIncorrectException {
+            LetterIncorrectException,
+            WrongBoardSizeException {
         Board board = new Board(3, 3);
         this.fillBoard3x3(board);
         board.updateBoard('G', "a3g");
@@ -105,7 +113,8 @@ public class TestBoard {
             IndexOutOfBoundsException,
             PlaceStringIncorrectException,
             PlaceAlreadyTakenException,
-            LetterIncorrectException {
+            LetterIncorrectException,
+            WrongBoardSizeException {
         Board board = new Board(3, 3);
         this.fillBoard3x3(board);
         board.updateBoard('G', "a");
@@ -116,9 +125,50 @@ public class TestBoard {
             IndexOutOfBoundsException,
             PlaceStringIncorrectException,
             PlaceAlreadyTakenException,
-            LetterIncorrectException {
+            LetterIncorrectException,
+            WrongBoardSizeException {
         Board board = new Board(3, 3);
         this.fillBoard3x3(board);
         board.updateBoard('-', "a1");
+    }
+    
+    @Test(expected = WrongBoardSizeException.class)
+    public void test_wrong_board_size() throws
+            IndexOutOfBoundsException,
+            PlaceStringIncorrectException,
+            PlaceAlreadyTakenException,
+            LetterIncorrectException,
+            WrongBoardSizeException {
+        new Board(1, 0);
+    }
+    
+    @Test(expected = WrongBoardSizeException.class)
+    public void test_wrong_board_size_2() throws
+            IndexOutOfBoundsException,
+            PlaceStringIncorrectException,
+            PlaceAlreadyTakenException,
+            LetterIncorrectException,
+            WrongBoardSizeException {
+        new Board(0, 1);
+    }
+    
+    @Test(expected = WrongBoardSizeException.class)
+    public void test_wrong_board_size_3() throws
+            IndexOutOfBoundsException,
+            PlaceStringIncorrectException,
+            PlaceAlreadyTakenException,
+            LetterIncorrectException,
+            WrongBoardSizeException {
+        new Board(0, 0);
+    }
+    
+    @Test
+    public void test_correct_board_size() throws
+            IndexOutOfBoundsException,
+            PlaceStringIncorrectException,
+            PlaceAlreadyTakenException,
+            LetterIncorrectException,
+            WrongBoardSizeException {
+        new Board(1, 1);
     }
 }

@@ -17,7 +17,10 @@ public class Board {
     private Square[][] board;
     private LetterValueHandler letterValueHandler;
 
-    public Board(int width, int height) {
+    public Board(int width, int height) throws WrongBoardSizeException {
+        if (width < 1 || height < 1) {
+            throw new WrongBoardSizeException("Board have to be at least a 1 by 1 grid");
+        }
         this.board = new Square[width][height];
         this.newBoard();
         this.letterValueHandler = LetterValueHandler.getInstance();
@@ -77,7 +80,7 @@ public class Board {
         this.board[row][col].setLetter(letter);
     }
 
-    public static void main(String[] args) throws PlaceStringIncorrectException, IndexOutOfBoundsException, PlaceAlreadyTakenException, LetterIncorrectException {
+    public static void main(String[] args) throws PlaceStringIncorrectException, IndexOutOfBoundsException, PlaceAlreadyTakenException, LetterIncorrectException, WrongBoardSizeException {
         LetterValueHandler hand = LetterValueHandler.getInstance();
         hand.readFromFile(System.getProperty("user.dir") + "\\data\\letter.txt");
         Board board = new Board(5, 5);

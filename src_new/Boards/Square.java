@@ -34,4 +34,9 @@ public class Square {
     public void setLetter(char letter) {
         this.letter = letter;
     }
+
+    // @Override
+    // public String toString() {
+    //     return this.letter + String.valueOf(this.squareType);
+    // }
 }

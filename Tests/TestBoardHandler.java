@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import Boards.Square;
+import Boards.Errors.WrongBoardSizeException;
 import Handlers.BoardHandler;
 import Handlers.LetterValueHandler;
 import Handlers.WordHandler;
@@ -13,7 +14,7 @@ public class TestBoardHandler {
     private WordHandler wordHandler;
 
     @Before
-    public void init() {
+    public void init() throws WrongBoardSizeException {
         this.boardHandler = new BoardHandler("", "", 3, 3);
         this.wordHandler = WordHandler.getInstance();
         Square[][] board = new Square[3][3];
