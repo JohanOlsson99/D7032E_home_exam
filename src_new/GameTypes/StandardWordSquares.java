@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class StandardWordSquares extends GameType {
     public StandardWordSquares() {
         super();
+        this.showPoints = false;
     }
 
     @Override

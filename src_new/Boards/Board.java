@@ -71,7 +71,7 @@ public class Board {
             throw new IndexOutOfBoundsException("Number given is to large");
         }
         letter = Character.toUpperCase(letter);
-        if ((letter < 65) || (letter > 90)) {
+        if ((letter < 'A') || (letter > 'Z')) {
             throw new LetterIncorrectException("Letter chosen is not a correct character");
         }
         if (this.board[row][col].getLetter() != '\0') {

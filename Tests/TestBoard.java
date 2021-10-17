@@ -105,7 +105,7 @@ public class TestBoard {
             WrongBoardSizeException {
         Board board = new Board(3, 3);
         this.fillBoard3x3(board);
-        board.updateBoard('G', "a3g");
+        board.updateBoard('A', "a3g");
     }
     
     @Test(expected = PlaceStringIncorrectException.class)
@@ -130,6 +130,40 @@ public class TestBoard {
         Board board = new Board(3, 3);
         this.fillBoard3x3(board);
         board.updateBoard('-', "a1");
+    }
+    
+    @Test(expected = LetterIncorrectException.class)
+    public void test_place_wrong_letter_2() throws
+            IndexOutOfBoundsException,
+            PlaceStringIncorrectException,
+            PlaceAlreadyTakenException,
+            LetterIncorrectException,
+            WrongBoardSizeException {
+        Board board = new Board(3, 3);
+        this.fillBoard3x3(board);
+        board.updateBoard('[', "a1");
+    }
+    
+    @Test
+    public void test_place_correct_letter() throws
+            IndexOutOfBoundsException,
+            PlaceStringIncorrectException,
+            PlaceAlreadyTakenException,
+            LetterIncorrectException,
+            WrongBoardSizeException {
+        Board board = new Board(3, 3);
+        board.updateBoard('a', "a1");
+    }
+    
+    @Test
+    public void test_place_correct_letter_2() throws
+            IndexOutOfBoundsException,
+            PlaceStringIncorrectException,
+            PlaceAlreadyTakenException,
+            LetterIncorrectException,
+            WrongBoardSizeException {
+        Board board = new Board(3, 3);
+        board.updateBoard('z', "a1");
     }
     
     @Test(expected = WrongBoardSizeException.class)

@@ -11,11 +11,10 @@ public class GameType {
         
     }
     
-    private boolean showPoints;
+    protected boolean showPoints = true;
     private Random random = new Random();
 
     public GameType() {
-        this.showPoints = false;
     }
 
     public int getRandomStartPlayer(int length) {
@@ -53,14 +52,33 @@ public class GameType {
         return totalPoints;
     }
 
+    /**
+     * 
+     * @param currentWordPoints calculated word points
+     * @param wordLength length of the word
+     * @return returns the points for a word for different game modes,
+     * ex points for wordLength and points for letter value.
+     */
     protected int wordPointsToGive(int currentWordPoints, int wordLength) {
+        // returns the calculated points
         return currentWordPoints;
     }
 
-    protected int multiplyWordPoints(int points, int multiply) {
-        return points * multiply;
+    /**
+     * 
+     * @param currentWordPoints current word points
+     * @param multiply multiply value
+     * @return returns the points times the multiply value, can be changed for different game modes
+     */
+    protected int multiplyWordPoints(int currentWordPoints, int multiply) {
+        return currentWordPoints * multiply;
     }
 
+    /**
+     * 
+     * @param letter the square letter
+     * @return the multiply letter value, ex Double letter och Tripple letter
+     */
     protected int multiplyLetterPoints(Square letter) {
         int multiply = 1;
         switch (letter.getSquareType()) {
