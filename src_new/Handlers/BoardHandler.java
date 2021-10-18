@@ -175,9 +175,6 @@ public class BoardHandler {
     }
 }
 
-
-
-
 // // takes out all row words
         // ArrayList<String> rowWords = new ArrayList<String>();
         // for (row = 0; row < board.length; row++) {

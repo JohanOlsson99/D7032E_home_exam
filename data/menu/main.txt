@@ -1,0 +1,17 @@
+****************************************************************
+ Welcome to VarietyBoggle
+****************************************************************
+ Current settings:
+    Board size (rows/columns): #BoardSize
+    Language: #Language
+    Number of players: #NumOfPlayers
+    Number of bots: #NumOfBots
+****************************************************************
+ Menu:
+  [1] Play standard WordSquares
+  [2] Play ScrabbleSquares on standard board
+  [3] Load 5x5 predefined ScrabbleBoard and play ScrabbleSquares
+  [4] Load 5x5 randomised ScrabbleBoard and play ScrabbleSquares
+  [5] Settings
+  [!] Quit
+****************************************************************

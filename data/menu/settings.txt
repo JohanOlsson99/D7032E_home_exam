@@ -1,0 +1,13 @@
+****************************************************************
+ Current settings:
+  [1]  Board size (rows/columns): #BoardSize
+  [2]  Language: #Language
+  [3]  Number of players: #NumOfPlayers
+  [4]  Number of bots: #NumOfBots
+  [5]  Return to the main menu
+****************************************************************
+#OPTIONS
+Enter new board size (rows/columns):
+Currently only English is supported
+Enter the number of players:
+Enter the number of bots:

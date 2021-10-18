@@ -1,20 +1,60 @@
 package GameTypes;
 import Boards.Square;
+import Boards.Errors.WrongBoardSizeException;
+import Boards.Board;
 import Handlers.LetterValueHandler;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class GameType {
+    
     public static void main(String[] args) {
-        GameType gameType = new GameType();
-        
+        GameType gameType = new GameType();   
     }
     
     protected boolean showPoints = true;
-    private Random random = new Random();
+    protected boolean showMultiplyPoints = true;
+    private Random random;
 
     public GameType() {
+        this.random = new Random();
+    }
+
+    public Board initBoard(String filePath, int width, int height) throws WrongBoardSizeException {
+        Board board = new Board(width, height);
+        this.setTile(filePath, board);
+        return board;
+    }
+
+    protected void setTile(String filePath, Board board) {
+        FileReader fileReader;
+        try {
+            fileReader = new FileReader(filePath);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            String line = null;
+            int row = 0;
+            while((line = bufferedReader.readLine()) != null) {
+                String gameTypes = line.replace(" ", "");
+                for (int col = 0; col < gameTypes.length(); col++) {
+                    if (row >= board.getRowSize() || col >= board.getColSize()) {
+                        break;
+                    }
+                    int gameType = Character.getNumericValue(gameTypes.charAt(col));
+                    board.setBoardType(row, col, gameType);
+                }
+                row++;
+            }
+            bufferedReader.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public int getRandomStartPlayer(int length) {
@@ -97,5 +137,9 @@ public class GameType {
 
     public boolean showPoints() {
         return this.showPoints;
+    }
+    
+    public boolean showMultiplyPoints() {
+        return this.showMultiplyPoints;
     }
 }

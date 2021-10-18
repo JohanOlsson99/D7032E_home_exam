@@ -9,6 +9,7 @@ public class ScrabbleSquares extends GameType {
     public ScrabbleSquares() {
         super();
         this.showPoints = true;
+        this.showMultiplyPoints = true;
     }
 
     @Override

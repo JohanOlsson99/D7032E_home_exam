@@ -92,6 +92,30 @@ public class Board {
         return this.board;
     }
 
+    public void setBoardType(int row, int col, int type) {
+        if (row > this.getRowSize() || row < 0) {
+            throw new IndexOutOfBoundsException("Row index out of bounds");
+        }
+        if (col > this.getColSize() || col < 0) {
+            throw new IndexOutOfBoundsException("Column index out of bounds");
+        }
+        if (type < Square.RL || type > Square.TW) {
+            type = Square.RL;
+        }
+        this.board[row][col].setSquareType(type);
+    }
+
+    public int getRowSize() {
+        return this.board.length;
+    }
+    
+    public int getColSize() {
+        if (this.board.length == 0) {
+            return 0;
+        }
+        return this.board[0].length;
+    }
+
     /**
      * 
      * @param dispLetterVal if the string contains the vales of each letter
@@ -101,11 +125,11 @@ public class Board {
     public String toString(boolean dispLetterVal, boolean dispExtraPoints) {
         int asciiRowCount = 97; //a
         String retStr = "";
-        for(int i=0; i<board[0].length; i++) {
-            retStr += "      "+ RESET + HEADING + "  " + i + "  ";
+        for(int i = 0; i < board[0].length; i++) {
+            retStr += "\t" + RESET + HEADING + "  " + i + "  ";
         }
         for(Square[] cols : board) {
-            retStr += "\t" + RESET +"\n"+HEADING + "  "+ ((char) asciiRowCount++)+"  "; 
+            retStr += "\t" + RESET + "\n" + HEADING + "  " + ((char) asciiRowCount++) + "  "; 
             for(Square letter : cols) {
                 String coloring = "";
                 switch (letter.getSquareType()) {
@@ -125,19 +149,21 @@ public class Board {
                         coloring = TRIPLE_WORD;
                         break;
                 }
-                String letterValue = letter.getLetter() == '\0' ? "     ":" [" + this.letterValueHandler.getValue(letter.getLetter()) + "]";
+                String letterValue = letter.getLetter() == '\0' ? "     " : " [" + this.letterValueHandler.getValue(letter.getLetter()) + "]";
                 String theLetter = "";
                 if (dispLetterVal) {
                     theLetter = letter.getLetter() + letterValue;
                 } else {
-                    theLetter = "  "+ (letter.getLetter() == '\0' ? " ": letter.getLetter()) + "  ";
+                    theLetter = "  "+ (letter.getLetter() == '\0' ? " " : letter.getLetter()) + "  ";
                 }
                 retStr += "\t" + RESET + coloring + theLetter;
             }
         }
         retStr += "\t";
         if(dispExtraPoints) {
-            retStr += RESET + "\n\n\t" +REGULAR + " STD \t" + RESET+DOUBLE_LETTER + " DL  \t" + RESET+TRIPLE_LETTER + " TL  \t" + RESET+DOUBLE_WORD + " DW  \t" + RESET+TRIPLE_WORD + " TW  \t" + RESET;
+            retStr += RESET + "\n\n\t" + REGULAR + " STD \t" + RESET + DOUBLE_LETTER + " DL  \t"
+                + RESET + TRIPLE_LETTER + " TL  \t" + RESET + DOUBLE_WORD + " DW  \t" + RESET
+                + TRIPLE_WORD + " TW  \t" + RESET;
         }
         return retStr + RESET + "\n";
     }    

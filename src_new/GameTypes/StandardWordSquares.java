@@ -1,11 +1,23 @@
 package GameTypes;
 import Boards.Square;
+import Boards.Board;
 import java.util.ArrayList;
 
 public class StandardWordSquares extends GameType {
     public StandardWordSquares() {
         super();
         this.showPoints = false;
+        this.showMultiplyPoints = false;
+    }
+
+    @Override
+    protected void setTile(String filePath, Board board) {
+        for (int row = 0; row < board.getRowSize(); row++) {
+            for (int col = 0; col < board.getColSize(); col++) {
+                // sets all tiles to regular types
+                board.setBoardType(row, col, Square.RL);
+            }
+        }
     }
 
     @Override
