@@ -1,5 +1,6 @@
-import Boards.Board;
-import Boards.Square;
+import java.io.File;
+import java.util.ArrayList;
+
 import GameTypes.GameType;
 import GameTypes.ScrabbleSquares;
 import GameTypes.StandardWordSquares;
@@ -7,9 +8,6 @@ import Handlers.BoardHandler;
 import Players.Bot;
 import Players.Player;
 import View.GameView;
-import Boards.Errors.LetterIncorrectException;
-import Boards.Errors.PlaceAlreadyTakenException;
-import Boards.Errors.PlaceStringIncorrectException;
 import Boards.Errors.WrongBoardSizeException;
 import Controller.GameController;
 
@@ -20,31 +18,69 @@ public class Game {
     private GameView gameView;
     private Player[] players;
     private Player thisPlayer;
+    private String path;
 
     private static class Settings {
-        public static int rowSize = 3;
-        public static int colSize = 3;
+        public static int rowSize = 2;
+        public static int colSize = 2;
         public static String language = "English";
         public static int numOfPlayers = 1;
-        public static int numOfBots = 1;
-    }
-
-    public Game(GameType gameType) throws WrongBoardSizeException {
-        this.gameType = gameType;
-        this.boardHandler = new BoardHandler("CollinsScrabbleWords2019.txt", "letter.txt", 5, 5);
+        public static int numOfBots = 24;
     }
 
     public void run() {
         int turn = 0;
-        int index = 0;
+        int index = this.gameType.getRandomStartPlayer(this.players.length);
         while (turn < (Settings.rowSize * Settings.colSize)) {
-            index = turn % this.players.length;
-            if ((this.thisPlayer != null) && (this.players[index] == this.thisPlayer)) {
-                char letter = this.gameController.pickLetter();
-                System.out.println(letter);
+            index = index % this.players.length;
+            if (this.thisPlayer != null) {
+                this.gameView.print(this.thisPlayer.getBoard().toString(
+                    this.gameType.showPoints(),
+                    this.gameType.showMultiplyPoints()));
             }
-
+            char letter = this.players[index].pickAndPlace(gameController);
+            this.placeLetterForAllPlayers(letter, this.players[index]);
             turn++;
+            index++;
+        }
+        if (this.thisPlayer != null) {
+            this.gameView.print(this.thisPlayer.getBoard().toString(
+                this.gameType.showPoints(),
+                this.gameType.showMultiplyPoints()));
+        }
+        this.declareWinner();
+    }
+
+    private void declareWinner() {
+        int maxScore = 0;
+        for (Player player : this.players) {
+            int playerScore = gameType.getPoints(this.boardHandler.findAllWords(
+                player.getBoard().getBoard()));
+            player.setPoints(playerScore);
+            this.gameView.print(player.getName() + " : " + playerScore);
+            if (maxScore < playerScore) {
+                maxScore = playerScore;
+            }
+        }
+        ArrayList<Player> winners = new ArrayList<Player>();
+        for (Player player : this.players) {
+            if (player.getPoints() == maxScore) {
+                winners.add(player);
+            }
+        }
+        this.gameView.printWinners(winners, maxScore);
+    }
+
+    private void placeLetterForAllPlayers(char letter, Player skipPlayer) {
+        for (Player player : this.players) {
+            if (player == skipPlayer) {
+                continue;
+            }
+            if (player instanceof Player && player == this.thisPlayer) {
+                player.placeLetter(letter, gameController);
+            } else if (player instanceof Bot) {
+                ((Bot) player).placeLetter(letter, gameController);
+            }
         }
     }
 
@@ -52,30 +88,9 @@ public class Game {
 
     }
 
-    public void test() {
-        Board board = this.boardHandler.getBoard();
-        try {
-            board.updateBoard('Z', "a0");
-            board.updateBoard('A', "a1");
-            board.updateBoard('G', "a2");
-            board.updateBoard('Z', "b0");
-            board.updateBoard('A', "b1");
-            board.updateBoard('G', "b2");
-            board.updateBoard('Z', "c0");
-            board.updateBoard('A', "c1");
-            board.updateBoard('G', "c2");
-        } catch (IndexOutOfBoundsException | PlaceStringIncorrectException | PlaceAlreadyTakenException
-                | LetterIncorrectException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        System.out.println(board.toString(true, true));
-        System.out.println("Total points: " + gameType.getPoints(this.boardHandler.findAllWords()));
-    }
-
     private void initGame() {
         try {
-            this.boardHandler = new BoardHandler("CollinsScrabbleWords2019.txt", "letter.txt", Settings.colSize, Settings.rowSize);
+            this.boardHandler = new BoardHandler(this.path, this.path, Settings.colSize, Settings.rowSize);
         } catch (WrongBoardSizeException e) {
             // TODO Auto-generated catch block
             return;
@@ -86,8 +101,8 @@ public class Game {
         for (int i = 0; i < Settings.numOfPlayers; i++) {
             try {
                 this.players[i] = new Player(this.gameType.initBoard(
-                    System.getProperty("user.dir") + "\\data\\tile.txt",
-                    Settings.rowSize, Settings.colSize));
+                    this.path,
+                    Settings.rowSize, Settings.colSize), "Player " + i);
             } catch (WrongBoardSizeException e) {
                 e.printStackTrace();
                 return;
@@ -96,15 +111,12 @@ public class Game {
         for (int j = Settings.numOfPlayers; j < this.players.length; j++) {
             try {
                 this.players[j] = new Bot(this.gameType.initBoard(
-                    System.getProperty("user.dir") + "\\data\\tile.txt",
-                    Settings.rowSize, Settings.colSize));
+                    this.path,
+                    Settings.rowSize, Settings.colSize), "Bot " + j);
             } catch (WrongBoardSizeException e) {
                 e.printStackTrace();
                 return;
             }
-        }
-        for (int k = 0; k < this.players.length; k++) {
-            System.out.println(this.players[k].getBoard().toString(this.gameType.showPoints(), this.gameType.showMultiplyPoints()));
         }
         if (Settings.numOfPlayers > 0) {
             this.thisPlayer = this.players[0];
@@ -112,28 +124,21 @@ public class Game {
         this.run();
     }
 
-    public static void main(String[] args) throws WrongBoardSizeException {
-        // GameType gameType = new StandardWordSquares();
-        // GameType gameType2 = new GameType();
-        // Game game = new Game(gameType);
-        // gameType.setTile(System.getProperty("user.dir") + "\\data\\tile.txt", game.boardHandler.getBoard());
-        // // game.test();
-        // game = new Game(gameType2);
-        // gameType2.setTile(System.getProperty("user.dir") + "\\data\\tile.txt", game.boardHandler.getBoard());
-        // game.test();
-        
-        // gameView.printMainText(Settings.rowSize, Settings.colSize, Settings.language, Settings.numOfPlayers, Settings.numOfBots);
-        // gameView.printSettingsText(Settings.rowSize, Settings.colSize, Settings.language, Settings.numOfPlayers, Settings.numOfBots);
-        // gameView.printSettingsOption(1);
+    public static void main(String[] args) {
         Game game = new Game();
     }
 
-    public Game() throws WrongBoardSizeException {
-        this.gameController = new GameController(
-            System.getProperty("user.dir") + "\\data\\menu\\main.txt",
-            System.getProperty("user.dir") + "\\data\\menu\\settings.txt");
-        this.gameView = GameView.getInstance();
+    public Game() {
+        this.loadLanguage();
         this.mainMenu();
+    }
+
+    private void loadLanguage() {
+        this.path = System.getProperty("user.dir") + "\\data\\" + Settings.language + "\\";
+        this.gameController = new GameController(
+            this.path + "menu\\",
+            this.path + "menu\\");
+        this.gameView = GameView.getInstance();
     }
 
     private void mainMenu() {
@@ -142,26 +147,26 @@ public class Game {
         switch (input) {
             case "1":
                 // play standard
-                this.gameType = new StandardWordSquares();
+                this.gameType = new StandardWordSquares(GameType.boardStandard);
                 this.initGame();
                 break;
             case "2":
                 // play scrabble
-                this.gameType = new ScrabbleSquares();
+                this.gameType = new ScrabbleSquares(GameType.boardStandard);
                 this.initGame();
                 break;
             case "3":
                 // play pre-defined Scrabble 5x5
                 Settings.rowSize = 5;
                 Settings.colSize = 5;
-                this.gameType = new ScrabbleSquares();
+                this.gameType = new ScrabbleSquares(GameType.boardPreDefined);
                 this.initGame();
                 break;
             case "4":
                 // play random Scrabble 5x5
                 Settings.rowSize = 5;
                 Settings.colSize = 5;
-                this.gameType = new ScrabbleSquares();
+                this.gameType = new ScrabbleSquares(GameType.boardRandom);
                 this.initGame();            
                 break;
             case "5":
@@ -188,8 +193,8 @@ public class Game {
                 try {
                     row = Integer.parseInt(options[0]);
                     col = Integer.parseInt(options[1]);
-                    if (row < 1 || col < 1) {
-                        this.gameView.printWrongInput("Board needs to be at least a 1x1");
+                    if (row < 1 || col < 1 || row > 9 || col > 9) {
+                        this.gameView.printBoardSizeErrorText();
                     }
                     Settings.rowSize = row;
                     Settings.colSize = col;
@@ -200,8 +205,8 @@ public class Game {
                 break;
             case "2":
                 this.gameView.printSettingsOption(2);
+                this.setLanguage();
                 this.mainMenu();
-                // TODO: Language
                 break;
             case "3":
                 this.gameView.printSettingsOption(3);
@@ -233,6 +238,40 @@ public class Game {
                 break;
         }
 
+    }
+
+    private void setLanguage() {
+        File folder = new File(System.getProperty("user.dir") + "\\data\\");
+        File[] listOfFiles = folder.listFiles();
+
+        ArrayList<String> foldersList = new ArrayList<String>();
+        String folders = "";
+        boolean first = true;
+        for (int i = 0; i < listOfFiles.length; i++) {
+            if (listOfFiles[i].isDirectory()) {
+                foldersList.add(listOfFiles[i].getName());
+                if (first) {
+                    folders += listOfFiles[i].getName();
+                    first = false;
+                } else {
+                    folders += ", " + listOfFiles[i].getName();
+                }
+            }
+        }
+        this.gameView.print(folders + "\n exit with !");
+        while (true) {
+            String input = this.gameController.getInput();
+            if (input.equals("!")) {
+                return;
+            }
+            for (int j = 0; j < foldersList.size(); j++) {
+                if (input.equals(foldersList.get(j))) {
+                    Settings.language = foldersList.get(j);
+                    this.loadLanguage();
+                    return;
+                }
+            }
+        }
     }
 
 }

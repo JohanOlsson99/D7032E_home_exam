@@ -331,7 +331,7 @@ public class VarietyWordSquares {
     
     public VarietyWordSquares(String[] params) {
         String language="English";
-        int rows=6; int columns=6; int numberOfPlayers=1; int numberOfBots=1;
+        int rows=3; int columns=3; int numberOfPlayers=2; int numberOfBots=0;
         String playmode = "";
         if(params.length == 0) {
             while(!playmode.equals("!")) {
@@ -430,7 +430,7 @@ public class VarietyWordSquares {
         } else {
             System.out.println("IN ELSE");
             try {
-                client("127.0.0.1");            
+                client("0.0.0.0");            
             } catch (Exception e){}
         }  
     }
@@ -444,7 +444,6 @@ public class VarietyWordSquares {
                 dictionary.add(line);
                 dictionaryHash.add(line);
             }
-            System.out.println(dictionaryHash.size());
             initScrabbleValues();
             bufferedReader.close();
             server(numPlayers, numBots, board);
@@ -523,9 +522,10 @@ public class VarietyWordSquares {
         for(int i=0; i<numberOfBots; i++) {
             players.add(new Player(i+1, board, true, null, null, null)); //add a bot    
         }
-        if(numberPlayers>1)
+        if(numberPlayers>1) {
             System.out.println("IN LISTENING");
             aSocket = new ServerSocket(2048);
+        }
         for(int i=numberOfBots+1; i<numberPlayers+numberOfBots; i++) {
             Socket connectionSocket = aSocket.accept();
             ObjectInputStream inFromClient = new ObjectInputStream(connectionSocket.getInputStream());

@@ -12,23 +12,44 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class GameType {
+
+    private int boardType;
+
+    public static final int boardStandard = 1;
+    public static final int boardPreDefined = 2;
+    public static final int boardRandom = 3;
     
     public static void main(String[] args) {
-        GameType gameType = new GameType();   
+        GameType gameType = new GameType(1);   
     }
     
     protected boolean showPoints = true;
     protected boolean showMultiplyPoints = true;
     private Random random;
 
-    public GameType() {
+    public GameType(int boardType) {
+        this.boardType = boardType;
         this.random = new Random();
     }
 
     public Board initBoard(String filePath, int width, int height) throws WrongBoardSizeException {
         Board board = new Board(width, height);
-        this.setTile(filePath, board);
+        if (this.boardType == this.boardRandom) {
+            this.setTileRandom(board);
+        } else if (this.boardType == this.boardPreDefined) {
+            this.setTile(filePath + "tilePreDefined.txt", board);
+        } else {
+            this.setTile(filePath + "tile.txt", board);
+        }
         return board;
+    }
+    
+    protected void setTileRandom(Board board) {
+        for (int row = 0; row < board.getRowSize(); row++) {
+            for (int col = 0; col < board.getColSize(); col++) {
+                board.setBoardType(row, col, this.random.nextInt(Square.TW) + Square.RL);
+            }
+        }
     }
 
     protected void setTile(String filePath, Board board) {

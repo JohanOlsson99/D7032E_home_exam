@@ -1,39 +1,27 @@
 package Handlers;
-import Boards.Board;
 import Boards.Square;
-import Boards.Errors.LetterIncorrectException;
-import Boards.Errors.PlaceAlreadyTakenException;
-import Boards.Errors.PlaceStringIncorrectException;
 import Boards.Errors.WrongBoardSizeException;
 
-import java.text.CollationElementIterator;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class BoardHandler {
     private WordHandler wordHandler;
     private LetterValueHandler letterHandler;
-    private Board board;
+    // private Board board;
 
     public BoardHandler(WordHandler wordHandler, int width, int height) throws WrongBoardSizeException {
         this.wordHandler = wordHandler;
-        this.board = new Board(width, height);
-    }
-
-    public Board getBoard() {
-        return this.board;
     }
     
-    public BoardHandler(String wordFileName, String letterFileName, int boardWidth, int boardHeight) throws WrongBoardSizeException {
+    public BoardHandler(String wordFilePath, String letterFilePath, int boardWidth, int boardHeight) throws WrongBoardSizeException {
         this.wordHandler = WordHandler.getInstance();
-        this.wordHandler.readFromFile(System.getProperty("user.dir") + "\\data\\" + wordFileName);
+        this.wordHandler.readFromFile(wordFilePath);
         this.letterHandler = LetterValueHandler.getInstance();
-        this.letterHandler.readFromFile(System.getProperty("user.dir") + "\\data\\" + letterFileName);
-        this.board = new Board(boardWidth, boardHeight);
+        this.letterHandler.readFromFile(letterFilePath);
     }
 
-    public ArrayList<Square[]> findAllWords() {
-        Square[][] boardSquare = this.board.getBoard();
+    public ArrayList<Square[]> findAllWords(Square[][] boardSquare) {
+        // Square[][] boardSquare = this.board.getBoard();
 
         if (boardSquare.length < 1 || boardSquare[0].length < 1) {
             throw new IndexOutOfBoundsException(); // needs to be changed later!
@@ -46,16 +34,16 @@ public class BoardHandler {
         
         allWords.addAll(this.getAllDiagWords(boardSquare));
 
-        ArrayList<String> wordsText = new ArrayList<>();
-        for (int i = 0; i < allWords.size(); i++) {
-            String word = "";
-            for (int j = 0; j < allWords.get(i).length; j++) {
-                word += allWords.get(i)[j].getLetter();
-            }
-            wordsText.add(word);
-        }
-        System.out.println(wordsText.toString() + " words");
-        System.out.println(allWords.size() + " words found");
+        // ArrayList<String> wordsText = new ArrayList<>();
+        // for (int i = 0; i < allWords.size(); i++) {
+        //     String word = "";
+        //     for (int j = 0; j < allWords.get(i).length; j++) {
+        //         word += allWords.get(i)[j].getLetter();
+        //     }
+        //     wordsText.add(word);
+        // }
+        // System.out.println(wordsText.toString() + " words");
+        // System.out.println(allWords.size() + " words found");
 
         return allWords;
     }
@@ -154,24 +142,24 @@ public class BoardHandler {
         WordHandler word = WordHandler.getInstance();
         word.readFromFile(System.getProperty("user.dir") + "\\src\\CollinsScrabbleWords2019.txt");
         BoardHandler hand = new BoardHandler(word, 3, 3);
-        Board board = hand.getBoard();
-        try {
-            board.updateBoard('Z', "a0");
-            board.updateBoard('A', "a1");
-            board.updateBoard('G', "a2");
-            board.updateBoard('Z', "b0");
-            board.updateBoard('A', "b1");
-            board.updateBoard('G', "b2");
-            board.updateBoard('Z', "c0");
-            board.updateBoard('A', "c1");
-            board.updateBoard('G', "c2");
-        } catch (IndexOutOfBoundsException | PlaceStringIncorrectException | PlaceAlreadyTakenException
-                | LetterIncorrectException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        System.out.println(board.toString(true, true));
-        hand.findAllWords();
+        // Board board = hand.getBoard();
+        // try {
+        //     board.updateBoard('Z', "a0");
+        //     board.updateBoard('A', "a1");
+        //     board.updateBoard('G', "a2");
+        //     board.updateBoard('Z', "b0");
+        //     board.updateBoard('A', "b1");
+        //     board.updateBoard('G', "b2");
+        //     board.updateBoard('Z', "c0");
+        //     board.updateBoard('A', "c1");
+        //     board.updateBoard('G', "c2");
+        // } catch (IndexOutOfBoundsException | PlaceStringIncorrectException | PlaceAlreadyTakenException
+        //         | LetterIncorrectException e) {
+        //     // TODO Auto-generated catch block
+        //     e.printStackTrace();
+        // }
+        // System.out.println(board.toString(true, true));
+        // hand.findAllWords();
     }
 }
 

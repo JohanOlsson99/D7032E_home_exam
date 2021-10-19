@@ -4,8 +4,8 @@ import Boards.Board;
 import java.util.ArrayList;
 
 public class StandardWordSquares extends GameType {
-    public StandardWordSquares() {
-        super();
+    public StandardWordSquares(int boardType) {
+        super(boardType);
         this.showPoints = false;
         this.showMultiplyPoints = false;
     }
@@ -34,7 +34,6 @@ public class StandardWordSquares extends GameType {
                 wordsToCalculate.add(words.get(i));
             }
         }
-        System.out.println(wordsString.toString());
         return this.calculatePoints(wordsToCalculate);
     }
 

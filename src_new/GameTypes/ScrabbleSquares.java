@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 public class ScrabbleSquares extends GameType {
     
-    public ScrabbleSquares() {
-        super();
+    public ScrabbleSquares(int boardType) {
+        super(boardType);
         this.showPoints = true;
         this.showMultiplyPoints = true;
     }

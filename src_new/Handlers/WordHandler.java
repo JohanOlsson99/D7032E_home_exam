@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.HashSet;
 
+import View.GameView;
+
 public class WordHandler {
     private HashSet<String> words;
 
@@ -27,7 +29,7 @@ public class WordHandler {
 
     public void readFromFile(String filePath) {
         try {
-            FileReader fileReader = new FileReader(filePath);
+            FileReader fileReader = new FileReader(filePath + "words.txt");
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String line = null;
             while((line = bufferedReader.readLine()) != null) {
@@ -36,7 +38,7 @@ public class WordHandler {
             // System.out.println(this.words.size());
             bufferedReader.close();
         } catch(Exception e) {
-            System.out.println(e.getMessage());
+            GameView.getInstance().print(e.getMessage());
         }
     }
 

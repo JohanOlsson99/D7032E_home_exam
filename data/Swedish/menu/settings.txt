@@ -1,0 +1,13 @@
+****************************************************************
+ Nuvarande inställningar:
+  [1]  Bräd storlek (rad/kollumn): #BoardSize
+  [2]  Språk: #Language
+  [3]  Antal spelare: #NumOfPlayers
+  [4]  Antal bottar: #NumOfBots
+  [5]  Återvänd till menyn
+****************************************************************
+#OPTIONS
+Slå in ett nytt brädstorlek (rad/kollumn):
+You can choose from:
+Slå in antal spelare:
+Slå in antal bottar:

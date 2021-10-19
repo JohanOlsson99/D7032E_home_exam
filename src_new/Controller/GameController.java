@@ -24,7 +24,7 @@ public class GameController {
                 inputInt = Integer.parseInt(input);
                 break;
             } catch (NumberFormatException e) {
-                GameView.getInstance().printWrongInput("Wrong input, cannot parse string to number");
+                GameView.getInstance().print("Wrong input, cannot parse string to number");
                 continue;
             }
         }
@@ -35,30 +35,65 @@ public class GameController {
     }
 
     public GameController(String mainPath, String settingsPath) {
-        this.parseMain(mainPath);
-        this.parseSettings(settingsPath);
+        this.parseMain(mainPath + "main.txt");
+        this.parseSettings(settingsPath + "settings.txt");
     }
 
     public char pickLetter() {
         GameView view = GameView.getInstance();
-        view.printPickLetterText();
+        view.printPickLetter();
         return this.getInput().replace(" ", "").charAt(0);
+    }
+
+    public String pickPlace(char letter) {
+        GameView view = GameView.getInstance();
+        view.printPickPlace(Character.toUpperCase(letter));
+        return this.getInput();
     }
 
     private void parseMain(String filePath) {
         String mainText = "";
+        GameView gameView = GameView.getInstance();
         try {
             FileReader fileReader = new FileReader(filePath);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String line = null;
+            Boolean atOptionsConfig = false;
+            int index = 0;
             while((line = bufferedReader.readLine()) != null) {
-                mainText += line + "\n";
+                if (line.equals("#OPTIONS")) {
+                    atOptionsConfig = true;
+                    System.out.println("TEST");
+                    continue;
+                }
+                if (atOptionsConfig) {
+                    switch (index) {
+                        case 0:
+                            gameView.setLetterChooseText(line);
+                            break;
+                        case 1:
+                            gameView.setPlaceLetterText(line);
+                            break;
+                        case 2:
+                            gameView.setBoardSizeErrorText(line);
+                            break;
+                        case 3:
+                            gameView.setWinnerText(line);
+                            break;
+                        case 4:
+                            gameView.setWinnersText(line);
+                            break;
+                    }
+                    index++;
+                } else {
+                    mainText += line + "\n";
+                }
             }
             bufferedReader.close();
         } catch(Exception e) {
-            System.out.println(e.getMessage());
+            gameView.print(e.getMessage());
         }
-        GameView.getInstance().setMainText(mainText);
+        gameView.setMainText(mainText);
     }
     
     private void parseSettings(String filePath) {
@@ -82,7 +117,7 @@ public class GameController {
             }
             bufferedReader.close();
         } catch(Exception e) {
-            System.out.println(e.getMessage());
+            GameView.getInstance().print(e.getMessage());
         }
         GameView.getInstance().setSettingsText(settingsText, optionsStrings.toArray(new String[0]));
     }

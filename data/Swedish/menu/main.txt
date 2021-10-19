@@ -1,0 +1,23 @@
+****************************************************************
+ Välkomment till VarietyBoggle
+****************************************************************
+ Nuvarande inställningar:
+    Bräd storlek (rad/kollumn): #BoardSize
+    Språk: #Language
+    Antal spelare: #NumOfPlayers
+    Antal bottar: #NumOfBots
+****************************************************************
+ Menu:
+  [1] Spela standard WordSquares
+  [2] Spela ScrabbleSquares på ett standard bräde
+  [3] Ladda in ett 5x5 fördefinerat ScrabbleBoard och spela ScrabbleSquares
+  [4] Ladda in ett 5x5 slumpmässigt ScrabbleBoard och spela ScrabbleSquares
+  [5] Settings
+  [!] Quit
+****************************************************************
+#OPTIONS
+Välj ett ord
+Placera ordet #1 (syntax [row column])
+Brädet måste vara minst ett 1x1 och som störst ett 9x9 bräde
+Vinnaren är: #1, med totalt #2 poäng
+Vinnarna är: #1, med totalt #2 poäng

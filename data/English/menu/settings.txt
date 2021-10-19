@@ -8,6 +8,6 @@
 ****************************************************************
 #OPTIONS
 Enter new board size (rows/columns):
-Currently only English is supported
+You can choose from:
 Enter the number of players:
 Enter the number of bots:

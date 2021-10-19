@@ -29,7 +29,7 @@ public class LetterValueHandler {
     public void readFromFile(String filePath) {
         FileReader fileReader;
         try {
-            fileReader = new FileReader(filePath);
+            fileReader = new FileReader(filePath + "letter.txt");
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String line = null;
             while((line = bufferedReader.readLine()) != null) {
