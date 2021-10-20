@@ -5,13 +5,25 @@ import Boards.Errors.PlaceAlreadyTakenException;
 import Boards.Errors.PlaceStringIncorrectException;
 import Boards.Errors.WrongBoardSizeException;
 import Controller.GameController;
-import View.GameView;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.io.ObjectOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 
 public class Player {
+
+    public static final String pickLetterOnline = "Pick letter";
+    public static final String placeLetterOnline = "Place letter: ";
+    public static final String winnerMessageOnline = "Winner: ";
 
     protected Board board;
     private String name;
     private int points;
+
+    protected Socket connection;
+    protected ObjectInputStream inputStream;
+    protected ObjectOutputStream outputStream;
 
     public Player(Board board, String name) throws WrongBoardSizeException {
         this.board = board;
@@ -30,52 +42,34 @@ public class Player {
         return this.name;
     }
 
-    public void placeLetter(char letter, GameController gameController) {
-        GameView gameView = GameView.getInstance();
+    public String placeLetter(char letter, GameController gameController) {
         String place = this.pickPlace(letter, gameController);
         do {
             try {
                 this.placeLetterOnBoard(letter, place);
                 break;
             } catch (IndexOutOfBoundsException | PlaceStringIncorrectException | PlaceAlreadyTakenException e) {
-                gameView.print(e.getMessage());
+                gameController.printErr(e.getMessage());
                 place = this.pickPlace(letter, gameController);    
-            } catch (LetterIncorrectException e) {
-                return; // should not get here!
-            }
+            } catch (LetterIncorrectException e) { }
         } while (true);
+        return place;
     }
 
     protected void placeLetterOnBoard(char letter, String place) throws
-        IndexOutOfBoundsException,
-        PlaceStringIncorrectException,
-        PlaceAlreadyTakenException,
-        LetterIncorrectException {
+            IndexOutOfBoundsException,
+            PlaceStringIncorrectException,
+            PlaceAlreadyTakenException,
+            LetterIncorrectException {
         this.board.updateBoard(letter, place);
     }
 
-    public char pickAndPlace(GameController gameController) {
-        GameView gameView = GameView.getInstance();
-        char letter = this.pickLetter(gameController);
-        String place = this.pickPlace(letter, gameController);
+    public char pickLetter(GameController gameController) {
+        char letter;
         do {
-            try {
-                this.placeLetterOnBoard(letter, place);
-                break;
-            } catch (IndexOutOfBoundsException | PlaceStringIncorrectException | PlaceAlreadyTakenException e) {
-                gameView.print(e.getMessage());
-                place = this.pickPlace(letter, gameController);    
-            } catch (LetterIncorrectException e) {
-                gameView.print(e.getMessage());
-                letter = this.pickLetter(gameController);
-                place = this.pickPlace(letter, gameController);
-            }
-        } while (true);
+            letter = Character.toUpperCase(gameController.pickLetter());
+        } while (letter < 'A' || letter > 'Z');
         return letter;
-    }
-
-    protected char pickLetter(GameController gameController) {
-        return gameController.pickLetter();
     }
 
     protected String pickPlace(char letter, GameController gameController) {
@@ -84,6 +78,40 @@ public class Player {
 
     public Board getBoard() {
         return this.board;
+    }
+
+    public void getBoardMessage() throws ClassNotFoundException, IOException {
+        this.board = (Board) this.getNextMessage();
+    }
+    
+    public void getNameMessage() throws ClassNotFoundException, IOException {
+        this.name = (String) this.getNextMessage();
+    }
+
+    public void connectToServer(String ipAdress, int port) throws UnknownHostException, IOException {
+        this.connection = new Socket(ipAdress, port);
+        this.setInputOutputStream();
+    }
+
+    public void closeConnection() {
+        try {
+            this.connection.close();
+        } catch (IOException e) {
+            // already closed if you get here
+        }
+    }
+
+    protected void setInputOutputStream() throws IOException {
+        this.inputStream = new ObjectInputStream(this.connection.getInputStream());
+        this.outputStream = new ObjectOutputStream(this.connection.getOutputStream());
+    }
+
+    public Object getNextMessage() throws ClassNotFoundException, IOException {
+        return this.inputStream.readObject();
+    }
+
+    public void sendMessage(Object message) throws IOException {
+        this.outputStream.writeObject(message);
     }
     
 }

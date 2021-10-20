@@ -1,6 +1,8 @@
 package Boards;
 
-public class Square {
+import java.io.Serializable;
+
+public class Square implements Serializable{
 
     public static final int RL = 1; //regular letter
     public static final int DL = 2; //double letter

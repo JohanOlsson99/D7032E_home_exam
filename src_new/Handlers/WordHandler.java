@@ -38,7 +38,7 @@ public class WordHandler {
             // System.out.println(this.words.size());
             bufferedReader.close();
         } catch(Exception e) {
-            GameView.getInstance().print(e.getMessage());
+            GameView.getInstance().printErr(e.getMessage());
         }
     }
 

@@ -4,10 +4,14 @@
   [2]  Språk: #Language
   [3]  Antal spelare: #NumOfPlayers
   [4]  Antal bottar: #NumOfBots
-  [5]  Återvänd till menyn
+  [5]  Port nummer: #PortNumber
+  [6]  Ip adress: #IpAddress
+  [7]  Återvänd till menyn
 ****************************************************************
 #OPTIONS
 Slå in ett nytt brädstorlek (rad/kollumn):
 You can choose from:
 Slå in antal spelare:
 Slå in antal bottar:
+Slå in nytt port nummer:
+Slå in ny ip adress:

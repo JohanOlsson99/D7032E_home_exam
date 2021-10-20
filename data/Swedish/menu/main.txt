@@ -6,14 +6,17 @@
     Språk: #Language
     Antal spelare: #NumOfPlayers
     Antal bottar: #NumOfBots
+    Port nummer: #PortNumber
+    Ip adress: #IpAddress
 ****************************************************************
  Menu:
   [1] Spela standard WordSquares
   [2] Spela ScrabbleSquares på ett standard bräde
   [3] Ladda in ett 5x5 fördefinerat ScrabbleBoard och spela ScrabbleSquares
   [4] Ladda in ett 5x5 slumpmässigt ScrabbleBoard och spela ScrabbleSquares
-  [5] Settings
-  [!] Quit
+  [5] Anslut till en server
+  [6] Installningar
+  [!] Avsluta
 ****************************************************************
 #OPTIONS
 Välj ett ord

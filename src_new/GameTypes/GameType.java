@@ -4,6 +4,8 @@ import Boards.Errors.WrongBoardSizeException;
 import Boards.Board;
 import Handlers.LetterValueHandler;
 
+import java.io.Serializable;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -11,7 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class GameType {
+public class GameType implements Serializable {
 
     private int boardType;
 

@@ -63,7 +63,6 @@ public class GameController {
             while((line = bufferedReader.readLine()) != null) {
                 if (line.equals("#OPTIONS")) {
                     atOptionsConfig = true;
-                    System.out.println("TEST");
                     continue;
                 }
                 if (atOptionsConfig) {
@@ -91,7 +90,7 @@ public class GameController {
             }
             bufferedReader.close();
         } catch(Exception e) {
-            gameView.print(e.getMessage());
+            gameView.printErr(e.getMessage());
         }
         gameView.setMainText(mainText);
     }
@@ -117,8 +116,16 @@ public class GameController {
             }
             bufferedReader.close();
         } catch(Exception e) {
-            GameView.getInstance().print(e.getMessage());
+            GameView.getInstance().printErr(e.getMessage());
         }
         GameView.getInstance().setSettingsText(settingsText, optionsStrings.toArray(new String[0]));
+    }
+
+    public void print(String str) {
+        GameView.getInstance().print(str);
+    }
+    
+    public void printErr(String str) {
+        GameView.getInstance().printErr(str);
     }
 }

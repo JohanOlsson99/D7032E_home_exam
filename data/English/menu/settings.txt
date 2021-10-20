@@ -4,10 +4,14 @@
   [2]  Language: #Language
   [3]  Number of players: #NumOfPlayers
   [4]  Number of bots: #NumOfBots
-  [5]  Return to the main menu
+  [5]  Port number: #PortNumber
+  [6]  Ip address: #IpAddress
+  [7]  Return to the main menu
 ****************************************************************
 #OPTIONS
 Enter new board size (rows/columns):
 You can choose from:
 Enter the number of players:
 Enter the number of bots:
+Enter new port number:
+Enter new Ip address:

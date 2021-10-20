@@ -6,18 +6,21 @@
     Language: #Language
     Number of players: #NumOfPlayers
     Number of bots: #NumOfBots
+    Port number: #PortNumber
+    Ip address: #IpAddress
 ****************************************************************
  Menu:
   [1] Play standard WordSquares
   [2] Play ScrabbleSquares on standard board
   [3] Load 5x5 predefined ScrabbleBoard and play ScrabbleSquares
   [4] Load 5x5 randomised ScrabbleBoard and play ScrabbleSquares
-  [5] Settings
+  [5] Connect to server
+  [6] Settings
   [!] Quit
 ****************************************************************
 #OPTIONS
 Pick a letter
 Place the letter #1 (syntax [row column])
 Board needs to be at least a 1x1 and maximum a 9x9 grid
-The winner is: #1, with a score of #2
-The winners are: #1, with a score of #2
+The winner is: #1, with a score of #2 point/s
+The winners are: #1, with a score of #2 point/s

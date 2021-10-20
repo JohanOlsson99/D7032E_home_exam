@@ -3,7 +3,10 @@ package Handlers;
 import java.util.HashMap;
 import java.io.*;
 
-public class LetterValueHandler {
+import java.io.Serializable;
+
+
+public class LetterValueHandler implements Serializable {
     private HashMap<Character, Integer> letterValues;
     private static LetterValueHandler INSTANCE;
     

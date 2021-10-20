@@ -430,7 +430,7 @@ public class VarietyWordSquares {
         } else {
             System.out.println("IN ELSE");
             try {
-                client("0.0.0.0");            
+                client("127.0.0.1");            
             } catch (Exception e){}
         }  
     }

@@ -18,7 +18,7 @@ public class Bot extends Player {
     }
 
     @Override
-    protected char pickLetter(GameController gameController) {
+    public char pickLetter(GameController gameController) {
         return (char) ('a' + this.random.nextInt(26));
     }
 
@@ -29,7 +29,7 @@ public class Bot extends Player {
         return Character.toString((char) ('a' + row)) + col;
     }
 
-    @Override
+    /*@Override
     public char pickAndPlace(GameController gameController) {
         char letter = this.pickLetter(null);
         while (true) {
@@ -43,12 +43,13 @@ public class Bot extends Player {
             }
         }
         return letter;
-    }
+    }*/
 
     @Override
-    public void placeLetter(char letter, GameController gameController) {
+    public String placeLetter(char letter, GameController gameController) {
+        String place = "";
         while (true) {
-            String place = this.pickPlace('\0', null);
+            place = this.pickPlace('\0', null);
             try {
                 this.placeLetterOnBoard(letter, place);
                 break;
@@ -57,6 +58,7 @@ public class Bot extends Player {
                 continue;
             }
         }
+        return place;
     }
 
 }

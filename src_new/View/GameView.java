@@ -16,6 +16,9 @@ public class GameView {
     private String winnerText;
     private String winnersText;
 
+    public static final String RED_TEXT = "\u001B[31m";
+    public static final String RESET_TEXT = "\u001B[0m";
+
     private static GameView INSTANCE = null;
 
     private GameView() { }
@@ -31,12 +34,14 @@ public class GameView {
         this.mainText = mainText;
     }
 
-    public void printMainText(int boardRow, int boardCol, String language, int numOfPlayers, int numOfBots) {
+    public void printMainText(int boardRow, int boardCol, String language, int numOfPlayers, int numOfBots, int portNumber, String ipAddress) {
         String parsedMainText = this.mainText;
         parsedMainText = parsedMainText.replace("#BoardSize", boardRow + "/" + boardCol);
         parsedMainText = parsedMainText.replace("#Language", language);
         parsedMainText = parsedMainText.replace("#NumOfPlayers", Integer.toString(numOfPlayers));
         parsedMainText = parsedMainText.replace("#NumOfBots", Integer.toString(numOfBots));
+        parsedMainText = parsedMainText.replace("#PortNumber", Integer.toString(portNumber));
+        parsedMainText = parsedMainText.replace("#IpAddress", ipAddress);
         print(parsedMainText);
     }
 
@@ -45,12 +50,14 @@ public class GameView {
         this.settingOptionsText = settingOptionsText;
     }
 
-    public void printSettingsText(int boardRow, int boardCol, String language, int numOfPlayers, int numOfBots) {
+    public void printSettingsText(int boardRow, int boardCol, String language, int numOfPlayers, int numOfBots, int portNumber, String ipAddress) {
         String parsedMainText = this.settingsText;
         parsedMainText = parsedMainText.replace("#BoardSize", boardRow + "/" + boardCol);
         parsedMainText = parsedMainText.replace("#Language", language);
         parsedMainText = parsedMainText.replace("#NumOfPlayers", Integer.toString(numOfPlayers));
         parsedMainText = parsedMainText.replace("#NumOfBots", Integer.toString(numOfBots));
+        parsedMainText = parsedMainText.replace("#PortNumber", Integer.toString(portNumber));
+        parsedMainText = parsedMainText.replace("#IpAddress", ipAddress);
         print(parsedMainText);
     }
     
@@ -65,6 +72,10 @@ public class GameView {
     public void print(String str) {
         System.out.println(str);
     }
+    
+    public void printErr(String str) {
+        System.out.println(RED_TEXT + str + RESET_TEXT);
+    }
 
     public void printPickLetter() {
         this.print(this.letterChooseText);
@@ -74,13 +85,12 @@ public class GameView {
         this.print(this.placeLetterText.replace("#1", Character.toString(letter)));
     }
 
-    public void printWinners(ArrayList<Player> winners, int maxScore) {
+    public String getWinnerText(ArrayList<Player> winners, int maxScore) {
         String winnersNames = "";
         if (winners.size() == 1) {
-            this.print(this.winnerText
-                .replace("#1", winners.get(0).getName())
-                .replace("#2", Integer.toString(maxScore)));
-            // this.print("The winner is: " + winners.get(0).getName() + ", with a score of " + maxScore);
+            return this.winnerText
+            .replace("#1", winners.get(0).getName())
+            .replace("#2", Integer.toString(maxScore));
         } else {
             for (int i = 0; i < winners.size(); i++) {
                 if (i == 0) {
@@ -89,11 +99,14 @@ public class GameView {
                     winnersNames += ", " + winners.get(i).getName();
                 }
             }
-            this.print(this.winnersText
-                .replace("#1", winnersNames)
-                .replace("#2", Integer.toString(maxScore)));
-            // this.print("the winners are: " + winnersName + ", with a score of " + maxScore);
+            return this.winnersText
+            .replace("#1", winnersNames)
+            .replace("#2", Integer.toString(maxScore));
         }
+    }
+
+    public void printWinners(ArrayList<Player> winners, int maxScore) {
+        this.print(this.getWinnerText(winners, maxScore));
     }
 
 

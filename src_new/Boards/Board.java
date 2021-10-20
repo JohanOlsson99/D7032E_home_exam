@@ -3,8 +3,9 @@ package Boards;
 import Boards.Errors.*;
 import Handlers.LetterValueHandler;
 
+import java.io.Serializable;
 
-public class Board {
+public class Board implements Serializable {
     
     public static final String REGULAR = "\u001B[47m\u001B[30m"; //white background black text
     public static final String DOUBLE_LETTER = "\u001B[46m\u001B[30m"; //cyan background black text
