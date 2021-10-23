@@ -2,8 +2,6 @@ package Model;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import GameTypes.GameType;
 import GameTypes.ScrabbleSquares;
@@ -27,16 +25,14 @@ public class Game {
     private BoardHandler boardHandler;
     private GameController gameController;
     private GameView gameView;
-    private Player[] players;
-    private Player thisPlayer;
     private String path;
+    private GameRunner gameRunner;
 
     public static void main(String[] args) throws ClassNotFoundException, IOException {
         new Game().startGame();
     }
 
     public Game() {
-        
     }
 
     public void startGame() {
@@ -51,22 +47,23 @@ public class Game {
     private void initGame() {
         this.boardHandler = new BoardHandler(this.path, this.path);
 
-        this.players = new Player[Settings.getNumOfPlayers() + Settings.getNumOfBots()];
+        Player[] players = new Player[Settings.getNumOfPlayers() + Settings.getNumOfBots()];
+        Player thisPlayer = null;
         if (Settings.getNumOfPlayers() > 0) {
             try {
-                this.players[0] = new Player(this.gameType.initBoard(
+                players[0] = new Player(this.gameType.initBoard(
                     this.path,
                     Settings.getRowSize(), Settings.getColSize()), "Player 1");
             } catch (WrongBoardSizeException e) {
                 handelError(e.getMessage());
                 return;
             }
-            this.thisPlayer = this.players[0];
+            thisPlayer = players[0];
         }
 
         for (int i = 1; i < Settings.getNumOfPlayers(); i++) {
             try {
-                this.players[i] = new OnlinePlayer(this.gameType.initBoard(
+                players[i] = new OnlinePlayer(this.gameType.initBoard(
                     this.path,
                     Settings.getRowSize(), Settings.getColSize()), "Online player " + i);                
             } catch (WrongBoardSizeException e) {
@@ -75,19 +72,19 @@ public class Game {
             }
             try {
                 this.gameView.print("Listening on port: " + (Settings.getPortNumber()));
-                ((OnlinePlayer) this.players[i]).connectToClient(Settings.getPortNumber());
-                ((OnlinePlayer) this.players[i]).sendBoard();
-                ((OnlinePlayer) this.players[i]).sendName();
-                ((OnlinePlayer) this.players[i]).sendMessage(this.gameType);
-                this.gameView.print("Connected on port: " + Settings.getPortNumber() + " with " + this.players[i].getName());
+                ((OnlinePlayer) players[i]).connectToClient(Settings.getPortNumber());
+                ((OnlinePlayer) players[i]).sendBoard();
+                ((OnlinePlayer) players[i]).sendName();
+                ((OnlinePlayer) players[i]).sendMessage(this.gameType);
+                this.gameView.print("Connected on port: " + Settings.getPortNumber() + " with " + players[i].getName());
             } catch (PlayerDisconnectedException | ClientConnectionFailedException e) {
                 handelError(e.getMessage());
                 return;
             }
         }
-        for (int j = Settings.getNumOfPlayers(); j < this.players.length; j++) {
+        for (int j = Settings.getNumOfPlayers(); j < players.length; j++) {
             try {
-                this.players[j] = new Bot(this.gameType.initBoard(
+                players[j] = new Bot(this.gameType.initBoard(
                     this.path,
                     Settings.getRowSize(), Settings.getColSize()), "Bot " + j);
             } catch (WrongBoardSizeException e) {
@@ -95,31 +92,51 @@ public class Game {
                 return;
             }
         }
-        this.run();
+        this.gameRunner = new GameRunner(players, thisPlayer, this.gameType, this.gameController);
+        try {
+            players = this.gameRunner.run();
+        } catch (PlayerDisconnectedException e) {
+            this.gameView.printErr(e.getMessage());
+            this.closeConnections(players);
+            this.mainMenu();
+            return;
+        }
+        // this.declareWinner(players);
+        this.calculateAndSendWinningMessage(players, thisPlayer);
+        this.closeConnections(players);
+        this.mainMenu();
     }
 
+    public void calculateAndSendWinningMessage(Player[] players, Player thisPlayer) {
+        int maxScore = this.calculatePointsForPlayers(players);
+        ArrayList<Player> winners = this.getWinners(players, maxScore);
+        String playerPoints = this.getPlayersPoints(players);
+        this.sendWinnersString(players, playerPoints, winners, maxScore, thisPlayer);
+    }
+
+/*
     private void run() {
         int turn = 0;
-        int index = this.gameType.getRandomStartPlayer(this.players.length);
+        int index = this.gameType.getRandomStartPlayer(players.length);
         while (turn < (Settings.getRowSize() * Settings.getColSize())) {
-            index = index % this.players.length;
+            index = index % players.length;
             if (this.thisPlayer != null) {
                 this.gameView.print(this.thisPlayer.getBoard().toString(
                     this.gameType.showPoints(),
                     this.gameType.showMultiplyPoints()));
             }
             char letter = '\0';
-            if (this.players[index] instanceof OnlinePlayer) {
+            if (players[index] instanceof OnlinePlayer) {
                 try {
-                    letter = ((OnlinePlayer) this.players[index]).pickLetter();
+                    letter = ((OnlinePlayer) players[index]).pickLetter();
                 } catch (PlayerDisconnectedException e) {
                     handelError(e.getMessage());
                     return;
                 }
-            } else if (this.players[index] instanceof Bot) {
-                letter = ((Bot) this.players[index]).pickLetter();
-            } else if (this.players[index] instanceof Player) {
-                letter = this.players[index].pickLetter(gameController);
+            } else if (players[index] instanceof Bot) {
+                letter = ((Bot) players[index]).pickLetter();
+            } else if (players[index] instanceof Player) {
+                letter = players[index].pickLetter(gameController);
             }
             this.placeLetterForAllPlayers(letter);
             turn++;
@@ -161,8 +178,8 @@ public class Game {
     }
 
     private void placeLetterForAllPlayers(char letter) {
-        ExecutorService threadpool = Executors.newFixedThreadPool(this.players.length);  
-        for (Player player : this.players) {
+        ExecutorService threadpool = Executors.newFixedThreadPool(players.length);  
+        for (Player player : players) {
             if (player instanceof Player && player == this.thisPlayer) {
                 Runnable task = new Runnable() {
                     @Override
@@ -205,11 +222,67 @@ public class Game {
             }
         }
     }
+*/
 
-    private void declareWinner() {
+    public int calculatePointsForPlayers(Player[] players) {
+        int maxScore = 0;
+        for (Player player : players) {
+            int playerScore = gameType.getPoints(
+                this.boardHandler.findAllWords(player.getBoard().getGameBoard()));
+            player.setPoints(playerScore);
+            if (maxScore < playerScore) {
+                maxScore = playerScore;
+            }
+        }
+        return maxScore;
+    }
+
+    public ArrayList<Player> getWinners(Player[] players, int maxScore) {
+        ArrayList<Player> winners = new ArrayList<Player>();
+        for (Player player : players) {
+            if (player.getPoints() == maxScore) {
+                winners.add(player);
+            }
+        }
+        return winners;
+    }
+
+    public String getPlayersPoints(Player[] players) {
+        String playerScores = "";
+        for (Player player : players) {
+            int playerScore = player.getPoints();
+            playerScores += player.getName() + " : " + playerScore + "\n";
+        }
+        return playerScores;
+    }
+
+    public void sendWinnersString(Player[] players, String playerPoints, ArrayList<Player> winners, int maxScore, Player thisPlayer) {
+        String winningMessage = playerPoints;
+        winningMessage += this.gameView.getWinnerText(winners, maxScore);
+        for (Player player : players) {
+            if (player instanceof Player && player == thisPlayer) {
+                this.gameView.print(winningMessage);
+            } else if (player instanceof OnlinePlayer) {
+                try {
+                    ((OnlinePlayer) player).sendWinnerMessage(winningMessage);
+                } catch (PlayerDisconnectedException e) {
+                    // even if one player disconnected we want to send the
+                    // winning message to the other players
+                    this.gameView.printErr(e.getMessage());
+                    continue;
+                }
+            }
+        }
+    }
+
+    /**
+     * 
+     * @param players
+     */
+    /*public ArrayList<Player> declareWinner(Player[] players) {
         int maxScore = 0;
         String winningMessage = "";
-        for (Player player : this.players) {
+        for (Player player : players) {
             int playerScore = gameType.getPoints(this.boardHandler.findAllWords(
                 player.getBoard().getGameBoard()));
             player.setPoints(playerScore);
@@ -219,28 +292,31 @@ public class Game {
             }
         }
         ArrayList<Player> winners = new ArrayList<Player>();
-        for (Player player : this.players) {
+        for (Player player : players) {
             if (player.getPoints() == maxScore) {
                 winners.add(player);
             }
         }
         winningMessage += this.gameView.getWinnerText(winners, maxScore);
-        for (Player player : this.players) {
-            if (player instanceof Player && player == this.thisPlayer) {
+        for (Player player : players) {
+            if (player instanceof Player && player == thisPlayer) {
                 this.gameView.print(winningMessage);
             } else if (player instanceof OnlinePlayer) {
                 try {
                     ((OnlinePlayer) player).sendWinnerMessage(winningMessage);
                 } catch (PlayerDisconnectedException e) {
-                    handelError(e.getMessage());
-                    return;
+                    // even if one player disconnected we want to send the
+                    // winning message to the other players
+                    this.gameView.printErr(e.getMessage());
+                    continue;
                 }
             }
         }
-    }
+        return winners;
+    }*/
 
-    private void closeConnections() {
-        for (Player player : this.players) {
+    private void closeConnections(Player[] players) {
+        for (Player player : players) {
             if (player instanceof OnlinePlayer) {
                 player.closeConnection();
             }
@@ -293,13 +369,22 @@ public class Game {
                 this.initGame();          
                 break;
             case "5":
-                this.connectToServer();
-            try {
-                this.runOnline();
-            } catch (PlayerDisconnectedException e) {
-                this.handelError(e.getMessage());
-                return;
-            }
+                Player player;
+                try {
+                    player = this.connectToServer();
+                } catch (ServerConnectionFailedException e) {
+                    this.gameView.printErr(e.getMessage());
+                    this.mainMenu();
+                    return;
+                }
+                try {
+                    this.gameRunner = new GameRunner(null, player, this.gameType, this.gameController);
+                    this.gameRunner.runOnline();
+                    this.mainMenu();
+                } catch (PlayerDisconnectedException e) {
+                    this.handelError(e.getMessage());
+                    return;
+                }
                 break;
             case "6":
                 this.settingsMenu();
@@ -428,21 +513,21 @@ public class Game {
         }
     }
 
-    private void connectToServer() {
-        this.players = new Player[] { new Player(null, "") };
-        this.thisPlayer = this.players[0];
+    private Player connectToServer() throws ServerConnectionFailedException {
+        Player[] players = new Player[] { new Player(null, "") };
+        Player thisPlayer = players[0];
         this.gameView.print("Connecting to server with port: " + Settings.getPortNumber());
         try {
-            this.thisPlayer.connectToServer(Settings.getIpAddress(), Settings.getPortNumber());
-            this.thisPlayer.getBoardMessage();
-            this.thisPlayer.getNameMessage();
-            this.gameType = (GameType) this.thisPlayer.getNextMessage();
+            thisPlayer.connectToServer(Settings.getIpAddress(), Settings.getPortNumber());
+            thisPlayer.getBoardMessage();
+            thisPlayer.getNameMessage();
+            this.gameType = (GameType) thisPlayer.getNextMessage();
         } catch (PlayerDisconnectedException | ServerConnectionFailedException e) {
-            handelError(e.getMessage());
-            return;
+            throw new ServerConnectionFailedException(e.getMessage());
         }
-        this.gameView.print("Connected as " + this.thisPlayer.getName());
-        this.gameView.print(this.thisPlayer.getBoard().toString(this.gameType.showPoints(), this.gameType.showMultiplyPoints()));
+        this.gameView.print("Connected as " + thisPlayer.getName());
+        this.gameView.print(thisPlayer.getBoard().toString(this.gameType.showPoints(), this.gameType.showMultiplyPoints()));
+        return thisPlayer;
     }
 
     private void handelError(String e) {
