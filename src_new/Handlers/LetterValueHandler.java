@@ -15,7 +15,7 @@ public class LetterValueHandler implements Serializable {
     }
 
     /**
-     * creates an instance if no instance exits otherwise does nothing
+     * creates an instance if no instance exits otherwise returns the already created instance
      * @return the instance of this class
      */
     public static LetterValueHandler getInstance() {
@@ -26,8 +26,9 @@ public class LetterValueHandler implements Serializable {
     }
 
     /**
-     * 
-     * @param filePath file path to the letter values
+     * Read a file which should contain letters and points, the LetterHandler store these
+     * letters with points for each
+     * @param filePath file path to the file letter.txt
      */
     public void readFromFile(String filePath) {
         FileReader fileReader;
@@ -50,14 +51,8 @@ public class LetterValueHandler implements Serializable {
         }
     }
 
-    public static void main(String[] args) {
-        LetterValueHandler hand = LetterValueHandler.getInstance();
-        hand.readFromFile(System.getProperty("user.dir") + "\\data\\letter.txt");
-        System.out.println(hand.letterValues.toString());
-    }
-
     /**
-     * 
+     * The points for a specific letter
      * @param letter Char to get value for
      * @return Returns the value for a char, if char not found, returns 0
      */
@@ -72,12 +67,7 @@ public class LetterValueHandler implements Serializable {
         return value;
     }
 
-    /**
-     * 
-     * @param key Character to be stored in a hashmap
-     * @param value Value which the character gives as points
-     */
-    public void setValue(char key, int value) {
+    private void setValue(char key, int value) {
         this.letterValues.put(Character.toUpperCase(key), value);
     }
     

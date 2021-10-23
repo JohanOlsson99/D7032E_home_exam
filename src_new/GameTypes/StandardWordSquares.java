@@ -15,7 +15,7 @@ public class StandardWordSquares extends GameType {
         for (int row = 0; row < board.getRowSize(); row++) {
             for (int col = 0; col < board.getColSize(); col++) {
                 // sets all tiles to regular types
-                board.setBoardType(row, col, Square.RL);
+                board.setGameBoardType(row, col, Square.RL);
             }
         }
     }

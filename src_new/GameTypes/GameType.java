@@ -21,14 +21,14 @@ public class GameType implements Serializable {
     public static final int boardPreDefined = 2;
     public static final int boardRandom = 3;
     
-    public static void main(String[] args) {
-        GameType gameType = new GameType(1);   
-    }
-    
     protected boolean showPoints = true;
     protected boolean showMultiplyPoints = true;
     private Random random;
 
+    /**
+     * 
+     * @param boardType a value to define how the board should be initialized, standard, predefined or random
+     */
     public GameType(int boardType) {
         this.boardType = boardType;
         this.random = new Random();
@@ -49,7 +49,7 @@ public class GameType implements Serializable {
     protected void setTileRandom(Board board) {
         for (int row = 0; row < board.getRowSize(); row++) {
             for (int col = 0; col < board.getColSize(); col++) {
-                board.setBoardType(row, col, this.random.nextInt(Square.TW) + Square.RL);
+                board.setGameBoardType(row, col, this.random.nextInt(Square.TW) + Square.RL);
             }
         }
     }
@@ -68,7 +68,7 @@ public class GameType implements Serializable {
                         break;
                     }
                     int gameType = Character.getNumericValue(gameTypes.charAt(col));
-                    board.setBoardType(row, col, gameType);
+                    board.setGameBoardType(row, col, gameType);
                 }
                 row++;
             }
@@ -80,10 +80,20 @@ public class GameType implements Serializable {
         }
     }
 
+    /**
+     * Gets a random start player as an index
+     * @param length how many players there are in this game
+     * @return the start player as the index from 0
+     */
     public int getRandomStartPlayer(int length) {
         return this.random.nextInt(length);
     }
 
+    /**
+     * gets the total points for words
+     * @param words the words which you want to get how much points these words together make up
+     * @return an number of how much points these words got together
+     */
     public int getPoints(ArrayList<Square[]> words) {
         return this.calculatePoints(words);
     }
@@ -158,10 +168,18 @@ public class GameType implements Serializable {
         return multiply;
     }
 
+    /**
+     * 
+     * @return the variable for if this game mode should print points for each letter
+     */
     public boolean showPoints() {
         return this.showPoints;
     }
     
+    /**
+     * 
+     * @return the variable for if this game mode should print multiply points explanation
+     */
     public boolean showMultiplyPoints() {
         return this.showMultiplyPoints;
     }

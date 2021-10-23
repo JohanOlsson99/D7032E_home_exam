@@ -16,7 +16,7 @@ public class WordHandler {
     }
 
     /**
-     * creates an instance if no instance exits otherwise does nothing
+     * creates an instance if no instance exits otherwise returns the already created instance
      * @return the instance of this class
      */
     public static WordHandler getInstance() {
@@ -26,7 +26,10 @@ public class WordHandler {
         return INSTANCE;
     }
 
-
+    /**
+     * Read a file which should contain words, the wordHandler store these words
+     * @param filePath filepath to words.txt
+     */
     public void readFromFile(String filePath) {
         try {
             FileReader fileReader = new FileReader(filePath + "words.txt");
@@ -42,16 +45,16 @@ public class WordHandler {
         }
     }
 
-    public static void main(String[] args) {
-        WordHandler word = WordHandler.getInstance();
-        word.readFromFile(System.getProperty("user.dir") + "\\src\\CollinsScrabbleWords2019.txt");
+    /**
+     * checks if the word exists and return true or false accordingly
+     * @param word the word which you want to check exists
+     * @return true if and only if the word exists, otherwise false
+     */
+    public boolean wordExists(String word) {
+        return this.words.contains(word);
     }
 
     private void addWord(String word) {
         this.words.add(word);
-    }
-
-    public boolean wordExists(String word) {
-        return this.words.contains(word);
     }
 }

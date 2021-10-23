@@ -1,5 +1,9 @@
 package Handlers;
+import Boards.Board;
 import Boards.Square;
+import Boards.Errors.LetterIncorrectException;
+import Boards.Errors.PlaceAlreadyTakenException;
+import Boards.Errors.PlaceStringIncorrectException;
 import Boards.Errors.WrongBoardSizeException;
 
 import java.util.ArrayList;
@@ -7,25 +11,25 @@ import java.util.ArrayList;
 public class BoardHandler {
     private WordHandler wordHandler;
     private LetterValueHandler letterHandler;
-    // private Board board;
 
-    public BoardHandler(WordHandler wordHandler, int width, int height) throws WrongBoardSizeException {
-        this.wordHandler = wordHandler;
-    }
-    
-    public BoardHandler(String wordFilePath, String letterFilePath, int boardWidth, int boardHeight) throws WrongBoardSizeException {
+    /**
+     * Creates a boardHandler with wordHandler and letterHandler
+     * @param wordFilePath file path to words.txt
+     * @param letterFilePath file path to letter.txt
+     */
+    public BoardHandler(String wordFilePath, String letterFilePath) {
         this.wordHandler = WordHandler.getInstance();
         this.wordHandler.readFromFile(wordFilePath);
         this.letterHandler = LetterValueHandler.getInstance();
         this.letterHandler.readFromFile(letterFilePath);
     }
 
+    /**
+     * Gets all possible words from a 2D-array of squares
+     * @param boardSquare a 2D-array of squares
+     * @return a 2D-list with all square words that exists in the 2D-array of squares
+     */
     public ArrayList<Square[]> findAllWords(Square[][] boardSquare) {
-        // Square[][] boardSquare = this.board.getBoard();
-
-        if (boardSquare.length < 1 || boardSquare[0].length < 1) {
-            throw new IndexOutOfBoundsException(); // needs to be changed later!
-        }
 
         ArrayList<Square[]> allWords = new ArrayList<Square[]>();
         allWords.addAll(this.getAllRowWords(boardSquare));
@@ -34,18 +38,23 @@ public class BoardHandler {
         
         allWords.addAll(this.getAllDiagWords(boardSquare));
 
-        // ArrayList<String> wordsText = new ArrayList<>();
-        // for (int i = 0; i < allWords.size(); i++) {
-        //     String word = "";
-        //     for (int j = 0; j < allWords.get(i).length; j++) {
-        //         word += allWords.get(i)[j].getLetter();
-        //     }
-        //     wordsText.add(word);
-        // }
-        // System.out.println(wordsText.toString() + " words");
-        // System.out.println(allWords.size() + " words found");
-
         return allWords;
+    }
+
+    public static void main(String[] args) throws WrongBoardSizeException, IndexOutOfBoundsException, PlaceStringIncorrectException, PlaceAlreadyTakenException, LetterIncorrectException {
+        BoardHandler boardHandler = new BoardHandler(System.getProperty("user.dir") + "\\Tests\\data\\", System.getProperty("user.dir") + "\\Tests\\data\\");
+        Board board = new Board(3, 3);
+        board.updateGameBoard('A', "a0");
+        board.updateGameBoard('A', "a1");
+        board.updateGameBoard('A', "a2");
+        board.updateGameBoard('B', "b0");
+        board.updateGameBoard('B', "b1");
+        board.updateGameBoard('B', "b2");
+        board.updateGameBoard('C', "c0");
+        board.updateGameBoard('C', "c1");
+        board.updateGameBoard('C', "c2");
+        ArrayList<Square[]> words = boardHandler.findAllWords(board.getGameBoard());
+        System.out.println(words.size());
     }
 
     private ArrayList<Square[]> getAllRowWords(Square[][] board) {
@@ -63,17 +72,6 @@ public class BoardHandler {
     }
 
     private ArrayList<Square[]> getAllColWords(Square[][] board) {
-        // ArrayList<String> wordsText = new ArrayList<>();
-
-        // for (int i = 0; i < board.length; i++) {
-        //     String word = "";
-        //     for (int j = 0; j < board[i].length; j++) {
-        //         word += board[i][j].getLetter();
-        //     }
-        //     wordsText.add(word);
-        // }
-        // System.out.println(wordsText.toString() + " words");
-
         // takes out all column words
         ArrayList<Square[]> colWordsSquare = new ArrayList<Square[]>();
         for (int col = 0; col < board[0].length; col++) {
@@ -137,78 +135,4 @@ public class BoardHandler {
         }
         return listOfWords;
     }
-
-    public static void main(String[] args) throws WrongBoardSizeException {
-        WordHandler word = WordHandler.getInstance();
-        word.readFromFile(System.getProperty("user.dir") + "\\src\\CollinsScrabbleWords2019.txt");
-        BoardHandler hand = new BoardHandler(word, 3, 3);
-        // Board board = hand.getBoard();
-        // try {
-        //     board.updateBoard('Z', "a0");
-        //     board.updateBoard('A', "a1");
-        //     board.updateBoard('G', "a2");
-        //     board.updateBoard('Z', "b0");
-        //     board.updateBoard('A', "b1");
-        //     board.updateBoard('G', "b2");
-        //     board.updateBoard('Z', "c0");
-        //     board.updateBoard('A', "c1");
-        //     board.updateBoard('G', "c2");
-        // } catch (IndexOutOfBoundsException | PlaceStringIncorrectException | PlaceAlreadyTakenException
-        //         | LetterIncorrectException e) {
-        //     // TODO Auto-generated catch block
-        //     e.printStackTrace();
-        // }
-        // System.out.println(board.toString(true, true));
-        // hand.findAllWords();
-    }
 }
-
-// // takes out all row words
-        // ArrayList<String> rowWords = new ArrayList<String>();
-        // for (row = 0; row < board.length; row++) {
-        //     String rowWord = "";
-        //     for (col = 0; col < board[row].length; col++) {
-        //         rowWord += board[row][col].getLetter();
-        //     }
-        //     System.out.println("Row word: " + rowWord);
-        //     rowWords.addAll(this.getAllSubStrings(rowWord));
-        // }
-        
-        // // takes out all column words
-        // ArrayList<String> colWords = new ArrayList<String>();
-        // for (col = 0; col < board.length; col++) {
-        //     String colWord = "";
-        //     for (row = 0; row < board[col].length; row++) {
-        //         colWord += board[row][col].getLetter();
-        //     }
-        //     colWords.addAll(this.getAllSubStrings(colWord));
-        // }
-
-        // // takes out all diagonal words from middle to left
-        // ArrayList<String> diagWords = new ArrayList<String>();
-        // for (row = 0; row < board.length; row++) {
-        //     int tempRow = row;
-        //     int tempCol = 0;
-        //     String diagWord = "";
-        //     while ((tempRow < board.length) && (tempCol < board[row].length)) {
-        //         diagWord += board[tempRow][tempCol].getLetter();
-        //         tempRow++;
-        //         tempCol++;
-        //     }
-        //     diagWords.addAll(this.getAllSubStrings(diagWord));
-        // }
-        
-        // // takes out all diagonal words from middle + 1 to right
-        // for (col = 1; col < board.length; col++) {
-        //     int tempCol = col;
-        //     int tempRow = 0;
-        //     String diagWord = "";
-        //     while ((tempCol < board.length) && (tempRow < board[col].length)) {
-        //         diagWord += board[tempRow][tempCol].getLetter();
-        //         tempRow++;
-        //         tempCol++;
-        //     }
-        //     diagWords.addAll(this.getAllSubStrings(diagWord));
-        // }
-        // rowWords.addAll(colWords);
-        // rowWords.addAll(diagWords);

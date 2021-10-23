@@ -10,6 +10,7 @@ import Boards.Errors.PlaceAlreadyTakenException;
 import Boards.Errors.PlaceStringIncorrectException;
 import Boards.Errors.WrongBoardSizeException;
 import Handlers.LetterValueHandler;
+import Boards.Square;
 
 
 public class TestBoard {
@@ -26,15 +27,28 @@ public class TestBoard {
             PlaceStringIncorrectException,
             PlaceAlreadyTakenException,
             LetterIncorrectException {
-        board.updateBoard('a', "a0");
-        board.updateBoard('b', "b0");
-        board.updateBoard('c', "c0");
-        board.updateBoard('d', "a1");
-        board.updateBoard('e', "b1");
-        board.updateBoard('f', "c1");
-        board.updateBoard('g', "a2");
-        board.updateBoard('h', "b2");
-        board.updateBoard('i', "c2");
+        board.updateGameBoard('a', "a0");
+        board.updateGameBoard('b', "b0");
+        board.updateGameBoard('c', "c0");
+        board.updateGameBoard('d', "a1");
+        board.updateGameBoard('e', "b1");
+        board.updateGameBoard('f', "c1");
+        board.updateGameBoard('g', "a2");
+        board.updateGameBoard('h', "b2");
+        board.updateGameBoard('i', "c2");
+    }
+
+    public void checkLetters(Board board) {
+        Square[][] square = board.getGameBoard();
+        assertEquals('A', square[0][0].getLetter());
+        assertEquals('B', square[1][0].getLetter());
+        assertEquals('C', square[2][0].getLetter());
+        assertEquals('D', square[0][1].getLetter());
+        assertEquals('E', square[1][1].getLetter());
+        assertEquals('F', square[2][1].getLetter());
+        assertEquals('G', square[0][2].getLetter());
+        assertEquals('H', square[1][2].getLetter());
+        assertEquals('I', square[2][2].getLetter());
     }
 
     @Test
@@ -46,6 +60,7 @@ public class TestBoard {
             WrongBoardSizeException {
         Board board = new Board(3, 3);
         this.fillBoard3x3(board);
+        this.checkLetters(board);
     }
     
     @Test(expected = PlaceAlreadyTakenException.class)
@@ -57,7 +72,7 @@ public class TestBoard {
             WrongBoardSizeException {
         Board board = new Board(3, 3);
         this.fillBoard3x3(board);
-        board.updateBoard('G', "b1");
+        board.updateGameBoard('G', "b1");
     }
     
     @Test(expected = IndexOutOfBoundsException.class)
@@ -69,7 +84,7 @@ public class TestBoard {
             WrongBoardSizeException {
         Board board = new Board(3, 3);
         this.fillBoard3x3(board);
-        board.updateBoard('G', "b3");
+        board.updateGameBoard('G', "b3");
     }
     
     @Test(expected = IndexOutOfBoundsException.class)
@@ -81,7 +96,7 @@ public class TestBoard {
             WrongBoardSizeException {
         Board board = new Board(3, 3);
         this.fillBoard3x3(board);
-        board.updateBoard('G', "d3");
+        board.updateGameBoard('G', "d3");
     }
 
     @Test(expected = PlaceStringIncorrectException.class)
@@ -93,7 +108,7 @@ public class TestBoard {
             WrongBoardSizeException {
         Board board = new Board(3, 3);
         this.fillBoard3x3(board);
-        board.updateBoard('G', "@3");
+        board.updateGameBoard('G', "@3");
     }
     
     @Test(expected = PlaceStringIncorrectException.class)
@@ -105,7 +120,7 @@ public class TestBoard {
             WrongBoardSizeException {
         Board board = new Board(3, 3);
         this.fillBoard3x3(board);
-        board.updateBoard('A', "a3g");
+        board.updateGameBoard('A', "a3g");
     }
     
     @Test(expected = PlaceStringIncorrectException.class)
@@ -117,7 +132,7 @@ public class TestBoard {
             WrongBoardSizeException {
         Board board = new Board(3, 3);
         this.fillBoard3x3(board);
-        board.updateBoard('G', "a");
+        board.updateGameBoard('G', "a");
     }
     
     @Test(expected = LetterIncorrectException.class)
@@ -129,7 +144,7 @@ public class TestBoard {
             WrongBoardSizeException {
         Board board = new Board(3, 3);
         this.fillBoard3x3(board);
-        board.updateBoard('-', "a1");
+        board.updateGameBoard('-', "a1");
     }
     
     @Test(expected = LetterIncorrectException.class)
@@ -141,7 +156,7 @@ public class TestBoard {
             WrongBoardSizeException {
         Board board = new Board(3, 3);
         this.fillBoard3x3(board);
-        board.updateBoard('[', "a1");
+        board.updateGameBoard('[', "a1");
     }
     
     @Test
@@ -152,7 +167,7 @@ public class TestBoard {
             LetterIncorrectException,
             WrongBoardSizeException {
         Board board = new Board(3, 3);
-        board.updateBoard('a', "a1");
+        board.updateGameBoard('a', "a1");
     }
     
     @Test
@@ -163,7 +178,7 @@ public class TestBoard {
             LetterIncorrectException,
             WrongBoardSizeException {
         Board board = new Board(3, 3);
-        board.updateBoard('z', "a1");
+        board.updateGameBoard('z', "a1");
     }
     
     @Test(expected = WrongBoardSizeException.class)

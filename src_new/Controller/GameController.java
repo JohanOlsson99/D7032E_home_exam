@@ -7,12 +7,33 @@ import java.util.Scanner;
 import View.GameView;
 
 public class GameController {
-    Scanner scanner = new Scanner(System.in);
-    
+    private Scanner scanner;
+
+     /**
+      * creates an instance of gameController and creates a scanner for the class,
+      * read files for the main text and settings text
+      * @param mainPath the path to main.txt
+      * @param settingsPath the path to settings.txt
+      */
+    public GameController(String mainPath, String settingsPath) {
+        this.parseMain(mainPath + "main.txt");
+        this.parseSettings(settingsPath + "settings.txt");
+        this.scanner = new Scanner(System.in);
+    }
+
+    /**
+     * Listens util an input from the player is given
+     * @return the input as a string
+     */
     public String getInput() {
         return this.scanner.nextLine();
     }
 
+    /**
+     * Listens util an input from the user is given,
+     * if the input cannot be parsed to a number continue listen
+     * @return an int for the value the player typed in
+     */
     public int getInputInt() {
         String input = this.getInput();
         if (input.equals("!")) {
@@ -34,17 +55,21 @@ public class GameController {
         return inputInt;
     }
 
-    public GameController(String mainPath, String settingsPath) {
-        this.parseMain(mainPath + "main.txt");
-        this.parseSettings(settingsPath + "settings.txt");
-    }
-
+    /**
+     * used to get a char out of an input, prints a message to the player so they know what to do
+     * @return a char from an input, removes the spaces and takes the first character for the input
+     */
     public char pickLetter() {
         GameView view = GameView.getInstance();
         view.printPickLetter();
         return this.getInput().replace(" ", "").charAt(0);
     }
 
+    /**
+     * used to get a string of an input, prints a message to the player so they know what to do
+     * @param letter used to display what letter to place on the board
+     * @return a string for which should be parse to a place
+     */
     public String pickPlace(char letter) {
         GameView view = GameView.getInstance();
         view.printPickPlace(Character.toUpperCase(letter));
@@ -121,10 +146,18 @@ public class GameController {
         GameView.getInstance().setSettingsText(settingsText, optionsStrings.toArray(new String[0]));
     }
 
+    /**
+     * passes the string to the gameView print
+     * @param str a string to print
+     */
     public void print(String str) {
         GameView.getInstance().print(str);
     }
     
+    /**
+     * passes the string to the gameView printErr
+     * @param str a string to print
+     */
     public void printErr(String str) {
         GameView.getInstance().printErr(str);
     }

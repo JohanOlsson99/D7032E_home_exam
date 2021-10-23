@@ -5,6 +5,9 @@ import Boards.Errors.PlaceAlreadyTakenException;
 import Boards.Errors.PlaceStringIncorrectException;
 import Boards.Errors.WrongBoardSizeException;
 import Controller.GameController;
+import Players.Errors.PlayerDisconnectedException;
+import Players.Errors.ServerConnectionFailedException;
+
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.io.ObjectOutputStream;
@@ -21,37 +24,64 @@ public class Player {
     private String name;
     private int points;
 
+    protected String disconnectMessage;
     protected Socket connection;
     protected ObjectInputStream inputStream;
     protected ObjectOutputStream outputStream;
 
-    public Player(Board board, String name) throws WrongBoardSizeException {
+    /**
+     * sets the disconnect message
+     * @param board the board that this player should have
+     * @param name the name this player should have
+     */
+    public Player(Board board, String name) {
         this.board = board;
         this.name = name;
+        this.disconnectMessage = "You have been disconnected from the server, the game will end now";
     }
 
+    /**
+     * sets this player's points
+     * @param points this players points
+     */
     public void setPoints(int points) {
         this.points = points;
     }
 
+    /**
+     * get this player's points
+     * @return this players points
+     */
     public int getPoints() {
         return this.points;
     }
 
+    /**
+     * get this player's name
+     * @return this player's name
+     */
     public String getName() {
         return this.name;
     }
 
+    /**
+     * place a letter for this player
+     * @param letter the letter to be placed
+     * @param gameController a gameController
+     * @return the place this player choose
+     */
     public String placeLetter(char letter, GameController gameController) {
-        String place = this.pickPlace(letter, gameController);
+        String place; // = this.pickPlace(letter, gameController);
         do {
+            place = this.pickPlace(letter, gameController);
             try {
                 this.placeLetterOnBoard(letter, place);
                 break;
             } catch (IndexOutOfBoundsException | PlaceStringIncorrectException | PlaceAlreadyTakenException e) {
                 gameController.printErr(e.getMessage());
-                place = this.pickPlace(letter, gameController);    
-            } catch (LetterIncorrectException e) { }
+            } catch (LetterIncorrectException e) {
+                // should not get here, another player have already checked the letter
+            }
         } while (true);
         return place;
     }
@@ -61,9 +91,14 @@ public class Player {
             PlaceStringIncorrectException,
             PlaceAlreadyTakenException,
             LetterIncorrectException {
-        this.board.updateBoard(letter, place);
+        this.board.updateGameBoard(letter, place);
     }
 
+    /**
+     * get the player to pick a letter
+     * @param gameController a gameController
+     * @return the letter the player choose
+     */
     public char pickLetter(GameController gameController) {
         char letter;
         do {
@@ -76,23 +111,59 @@ public class Player {
         return gameController.pickPlace(letter);
     }
 
+    /**
+     * 
+     * @return this players board
+     */
     public Board getBoard() {
         return this.board;
     }
 
-    public void getBoardMessage() throws ClassNotFoundException, IOException {
-        this.board = (Board) this.getNextMessage();
+    /**
+     * listens for the board from the server
+     * @throws PlayerDisconnectedException if something happens with the connection
+     */
+    public void getBoardMessage() throws PlayerDisconnectedException {
+        try {
+            this.board = (Board) this.getNextMessage();
+        } catch (ClassCastException e) {
+            this.closeConnection();
+            throw new PlayerDisconnectedException(this.disconnectMessage);
+        }
     }
     
-    public void getNameMessage() throws ClassNotFoundException, IOException {
-        this.name = (String) this.getNextMessage();
+    /**
+     * listens for the name from the server
+     * @throws PlayerDisconnectedException if something happens with the connection
+     */
+    public void getNameMessage() throws PlayerDisconnectedException {
+        try {
+            this.name = (String) this.getNextMessage();
+        } catch (ClassCastException e) {
+            this.closeConnection();
+            throw new PlayerDisconnectedException(this.disconnectMessage);
+        }
     }
 
-    public void connectToServer(String ipAdress, int port) throws UnknownHostException, IOException {
-        this.connection = new Socket(ipAdress, port);
-        this.setInputOutputStream();
+    /**
+     * tries to connect to the server
+     * @param ipAdress the ip address which the server is at
+     * @param port the port the server listens at
+     * @throws ServerConnectionFailedException if connection to the server was not possible
+     * @throws PlayerDisconnectedException if something happens with the connection
+     */
+    public void connectToServer(String ipAdress, int port) throws ServerConnectionFailedException, PlayerDisconnectedException {
+        try {
+            this.connection = new Socket(ipAdress, port);
+            this.setInputOutputStream();
+        } catch (IOException e) {
+            throw new ServerConnectionFailedException("Server connection failed, try again");
+        }
     }
 
+    /**
+     * closes the connection
+     */
     public void closeConnection() {
         try {
             this.connection.close();
@@ -101,17 +172,42 @@ public class Player {
         }
     }
 
-    protected void setInputOutputStream() throws IOException {
-        this.inputStream = new ObjectInputStream(this.connection.getInputStream());
-        this.outputStream = new ObjectOutputStream(this.connection.getOutputStream());
+    private void setInputOutputStream() throws PlayerDisconnectedException {
+        try {
+            this.inputStream = new ObjectInputStream(this.connection.getInputStream());
+            this.outputStream = new ObjectOutputStream(this.connection.getOutputStream());
+        } catch (IOException e) {
+            this.closeConnection();
+            throw new PlayerDisconnectedException(this.disconnectMessage);
+        }
     }
 
-    public Object getNextMessage() throws ClassNotFoundException, IOException {
-        return this.inputStream.readObject();
+    /**
+     * listens for a message and then returns it
+     * @return the object which was sent to this player
+     * @throws PlayerDisconnectedException if something happens with the connection
+     */
+    public Object getNextMessage() throws PlayerDisconnectedException {
+        try {
+            return this.inputStream.readObject();
+        } catch (ClassNotFoundException | IOException e) {
+            this.closeConnection();
+            throw new PlayerDisconnectedException(this.disconnectMessage);
+        }
     }
 
-    public void sendMessage(Object message) throws IOException {
-        this.outputStream.writeObject(message);
+    /**
+     * sends a message
+     * @param message the message to send
+     * @throws PlayerDisconnectedException if something happens with the connection
+     */
+    public void sendMessage(Object message) throws PlayerDisconnectedException {
+        try {
+            this.outputStream.writeObject(message);
+        } catch (IOException e) {
+            this.closeConnection();
+            throw new PlayerDisconnectedException(this.disconnectMessage);
+        }
     }
     
 }

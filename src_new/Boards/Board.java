@@ -15,26 +15,28 @@ public class Board implements Serializable {
     public static final String HEADING = "\u001B[44m\u001B[37m"; //blue background white text
     public static final String RESET = "\u001B[0m"; //reset to default
 
-    private Square[][] board;
+    private Square[][] gameBoard;
     private LetterValueHandler letterValueHandler;
 
+    /**
+     * creates a new board with new squares in each board place
+     * @param width gameBoard width
+     * @param height gameBoard height
+     * @throws WrongBoardSizeException if board width or board height is less then 1
+     */
     public Board(int width, int height) throws WrongBoardSizeException {
         if (width < 1 || height < 1) {
             throw new WrongBoardSizeException("Board have to be at least a 1 by 1 grid");
         }
-        this.board = new Square[width][height];
-        this.newBoard();
+        this.gameBoard = new Square[width][height];
+        this.newGameBoard();
         this.letterValueHandler = LetterValueHandler.getInstance();
     }
 
-    private void newBoard() {        
-        for (int i = 0; i < this.board.length; i++) {
-            // int asciiRowCount = 97;
-            // int type = 1;
-            for (int j = 0; j < this.board[i].length; j++) {
-                this.board[i][j] = new Square();
-                // this.board[i][j].setLetter((char) asciiRowCount++);
-                // this.board[i][j].setSquareType(type++);
+    private void newGameBoard() {        
+        for (int i = 0; i < this.gameBoard.length; i++) {
+            for (int j = 0; j < this.gameBoard[i].length; j++) {
+                this.gameBoard[i][j] = new Square();
             } 
         }
     }
@@ -48,7 +50,7 @@ public class Board implements Serializable {
      * @throws LetterIncorrectException if letter is incorrect
      * @throws PlaceAlreadyTaken if place is already taken with another letter
      */
-    public void updateBoard(char letter, String place) throws 
+    public void updateGameBoard(char letter, String place) throws 
             PlaceStringIncorrectException, 
             IndexOutOfBoundsException, 
             PlaceAlreadyTakenException,
@@ -65,35 +67,34 @@ public class Board implements Serializable {
             throw new PlaceStringIncorrectException("The character given is wrong");
         }
         col = Integer.parseInt(placement[1]);
-        if (row >= this.board.length) {
+        if (row >= this.gameBoard.length) {
             throw new IndexOutOfBoundsException("Character given is to large");
         }
-        if (col >= this.board[0].length) {
+        if (col >= this.gameBoard[0].length) {
             throw new IndexOutOfBoundsException("Number given is to large");
         }
         letter = Character.toUpperCase(letter);
         if ((letter < 'A') || (letter > 'Z')) {
             throw new LetterIncorrectException("Letter chosen is not a correct character");
         }
-        if (this.board[row][col].getLetter() != '\0') {
+        if (this.gameBoard[row][col].getLetter() != '\0') {
             throw new PlaceAlreadyTakenException("Cannot place letter on an already taken spot"); 
          }
-        this.board[row][col].setLetter(letter);
+        this.gameBoard[row][col].setLetter(letter);
     }
 
-    public static void main(String[] args) throws PlaceStringIncorrectException, IndexOutOfBoundsException, PlaceAlreadyTakenException, LetterIncorrectException, WrongBoardSizeException {
-        LetterValueHandler hand = LetterValueHandler.getInstance();
-        hand.readFromFile(System.getProperty("user.dir") + "\\data\\letter.txt");
-        Board board = new Board(5, 5);
-        // board.updateBoard('B', "a3");
-        System.out.println(board.toString(false, false));
+    public Square[][] getGameBoard() {
+        return this.gameBoard;
     }
 
-    public Square[][] getBoard() {
-        return this.board;
-    }
-
-    public void setBoardType(int row, int col, int type) {
+    /**
+     * sets the gameBoard type for a specific place on the board
+     * @param row the row place
+     * @param col the column place
+     * @param type the type for this tile
+     * @throws IndexOutOfBoundsException if the row or the column value passed in is to large or small
+     */
+    public void setGameBoardType(int row, int col, int type) throws IndexOutOfBoundsException {
         if (row > this.getRowSize() || row < 0) {
             throw new IndexOutOfBoundsException("Row index out of bounds");
         }
@@ -103,18 +104,26 @@ public class Board implements Serializable {
         if (type < Square.RL || type > Square.TW) {
             type = Square.RL;
         }
-        this.board[row][col].setSquareType(type);
+        this.gameBoard[row][col].setSquareType(type);
     }
 
+    /**
+     * 
+     * @return Row size of the gameBoard
+     */
     public int getRowSize() {
-        return this.board.length;
+        return this.gameBoard.length;
     }
     
+    /**
+     * 
+     * @return Column size of the gameBoard
+     */
     public int getColSize() {
-        if (this.board.length == 0) {
+        if (this.gameBoard.length == 0) {
             return 0;
         }
-        return this.board[0].length;
+        return this.gameBoard[0].length;
     }
 
     /**
@@ -126,10 +135,10 @@ public class Board implements Serializable {
     public String toString(boolean dispLetterVal, boolean dispExtraPoints) {
         int asciiRowCount = 97; //a
         String retStr = "";
-        for(int i = 0; i < board[0].length; i++) {
+        for(int i = 0; i < gameBoard[0].length; i++) {
             retStr += "\t" + RESET + HEADING + "  " + i + "  ";
         }
-        for(Square[] cols : board) {
+        for(Square[] cols : gameBoard) {
             retStr += "\t" + RESET + "\n" + HEADING + "  " + ((char) asciiRowCount++) + "  "; 
             for(Square letter : cols) {
                 String coloring = "";

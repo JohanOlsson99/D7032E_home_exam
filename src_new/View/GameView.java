@@ -139,7 +139,7 @@ public class GameView {
     }
 
     public void printBoardSizeErrorText() {
-        this.print(this.boardSizeErrorText);
+        this.printErr(this.boardSizeErrorText);
     }
     
     public void printWinnerText() {
