@@ -110,5 +110,19 @@ public class TestGameType {
         assertEquals(Square.DW, squares[2][1].getSquareType());
         assertEquals(Square.TW, squares[2][2].getSquareType());   
     }
+
+    @Test
+    public void testDifferentStartIndex() {
+        GameType gameType = new GameType(GameType.boardStandard);
+        int startPlayer = gameType.getRandomStartPlayer(10);
+        boolean otherStartIndex = false;
+        for (int i = 0; i < 100000; i++) {
+            if (gameType.getRandomStartPlayer(10) != startPlayer) {
+                otherStartIndex = true;
+                break;
+            }
+        }
+        assertTrue(otherStartIndex);
+    }
     
 }

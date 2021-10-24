@@ -5,17 +5,18 @@ import java.io.*;
 
 import java.io.Serializable;
 
-
 public class LetterValueHandler implements Serializable {
     private HashMap<Character, Integer> letterValues;
     private static LetterValueHandler INSTANCE;
-    
+
     private LetterValueHandler() {
         this.letterValues = new HashMap<Character, Integer>();
     }
 
     /**
-     * creates an instance if no instance exits otherwise returns the already created instance
+     * creates an instance if no instance exits otherwise returns the already
+     * created instance
+     * 
      * @return the instance of this class
      */
     public static LetterValueHandler getInstance() {
@@ -26,8 +27,9 @@ public class LetterValueHandler implements Serializable {
     }
 
     /**
-     * Read a file which should contain letters and points, the LetterHandler store these
-     * letters with points for each
+     * Read a file which should contain letters and points, the LetterHandler store
+     * these letters with points for each
+     * 
      * @param filePath file path to the file letter.txt
      */
     public void readFromFile(String filePath) {
@@ -36,7 +38,7 @@ public class LetterValueHandler implements Serializable {
             fileReader = new FileReader(filePath + "letter.txt");
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String line = null;
-            while((line = bufferedReader.readLine()) != null) {
+            while ((line = bufferedReader.readLine()) != null) {
                 String[] data = line.split(":");
                 String letters = data[0].replace(" ", "");
                 for (int i = 0; i < letters.length(); i++) {
@@ -53,6 +55,7 @@ public class LetterValueHandler implements Serializable {
 
     /**
      * The points for a specific letter
+     * 
      * @param letter Char to get value for
      * @return Returns the value for a char, if char not found, returns 0
      */
@@ -61,7 +64,7 @@ public class LetterValueHandler implements Serializable {
         int value;
         try {
             value = this.letterValues.get(letter);
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             value = 0;
         }
         return value;
@@ -70,5 +73,5 @@ public class LetterValueHandler implements Serializable {
     private void setValue(char key, int value) {
         this.letterValues.put(Character.toUpperCase(key), value);
     }
-    
+
 }

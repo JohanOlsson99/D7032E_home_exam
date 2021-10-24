@@ -1,11 +1,12 @@
 package GameTypes;
+
 import Boards.Square;
 import Handlers.LetterValueHandler;
 
 import java.util.ArrayList;
 
 public class ScrabbleSquares extends GameType {
-    
+
     public ScrabbleSquares(int boardType) {
         super(boardType);
         this.showPoints = true;
@@ -26,17 +27,17 @@ public class ScrabbleSquares extends GameType {
     protected int multiplyLetterPoints(Square letter) {
         int multiply = 1;
         switch (letter.getSquareType()) {
-            case Square.DL:
-                multiply *= 2;
-                break;
-            case Square.TL:
-                multiply *= 3;
-                break;
-            default:
-                multiply = 1;
-                break;
+        case Square.DL:
+            multiply *= 2;
+            break;
+        case Square.TL:
+            multiply *= 3;
+            break;
+        default:
+            multiply = 1;
+            break;
         }
         return multiply;
     }
-    
+
 }

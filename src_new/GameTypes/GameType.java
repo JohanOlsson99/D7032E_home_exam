@@ -1,4 +1,5 @@
 package GameTypes;
+
 import Boards.Square;
 import Boards.Errors.WrongBoardSizeException;
 import Boards.Board;
@@ -20,14 +21,15 @@ public class GameType implements Serializable {
     public static final int boardStandard = 1;
     public static final int boardPreDefined = 2;
     public static final int boardRandom = 3;
-    
+
     protected boolean showPoints = true;
     protected boolean showMultiplyPoints = true;
     private Random random;
 
     /**
      * 
-     * @param boardType a value to define how the board should be initialized, standard, predefined or random
+     * @param boardType a value to define how the board should be initialized,
+     *                  standard, predefined or random
      */
     public GameType(int boardType) {
         this.boardType = boardType;
@@ -45,7 +47,7 @@ public class GameType implements Serializable {
         }
         return board;
     }
-    
+
     protected void setTileRandom(Board board) {
         for (int row = 0; row < board.getRowSize(); row++) {
             for (int col = 0; col < board.getColSize(); col++) {
@@ -61,7 +63,7 @@ public class GameType implements Serializable {
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String line = null;
             int row = 0;
-            while((line = bufferedReader.readLine()) != null) {
+            while ((line = bufferedReader.readLine()) != null) {
                 String gameTypes = line.replace(" ", "");
                 for (int col = 0; col < gameTypes.length(); col++) {
                     if (row >= board.getRowSize() || col >= board.getColSize()) {
@@ -82,6 +84,7 @@ public class GameType implements Serializable {
 
     /**
      * Gets a random start player as an index
+     * 
      * @param length how many players there are in this game
      * @return the start player as the index from 0
      */
@@ -91,7 +94,9 @@ public class GameType implements Serializable {
 
     /**
      * gets the total points for words
-     * @param words the words which you want to get how much points these words together make up
+     * 
+     * @param words the words which you want to get how much points these words
+     *              together make up
      * @return an number of how much points these words got together
      */
     public int getPoints(ArrayList<Square[]> words) {
@@ -109,12 +114,12 @@ public class GameType implements Serializable {
                 int letterPoints = letterValueHandler.getValue(word[j].getLetter());
                 letterPoints *= this.multiplyLetterPoints(word[j]);
                 switch (word[j].getSquareType()) {
-                    case Square.DW:
-                        wordMultiplier *= 2;
-                        break;
-                    case Square.TW:
-                        wordMultiplier *= 3;
-                        break;
+                case Square.DW:
+                    wordMultiplier *= 2;
+                    break;
+                case Square.TW:
+                    wordMultiplier *= 3;
+                    break;
                 }
                 wordPoints += letterPoints;
             }
@@ -128,9 +133,9 @@ public class GameType implements Serializable {
     /**
      * 
      * @param currentWordPoints calculated word points
-     * @param wordLength length of the word
-     * @return returns the points for a word for different game modes,
-     * ex points for wordLength and points for letter value.
+     * @param wordLength        length of the word
+     * @return returns the points for a word for different game modes, ex points for
+     *         wordLength and points for letter value.
      */
     protected int wordPointsToGive(int currentWordPoints, int wordLength) {
         // returns the calculated points
@@ -140,8 +145,9 @@ public class GameType implements Serializable {
     /**
      * 
      * @param currentWordPoints current word points
-     * @param multiply multiply value
-     * @return returns the points times the multiply value, can be changed for different game modes
+     * @param multiply          multiply value
+     * @return returns the points times the multiply value, can be changed for
+     *         different game modes
      */
     protected int multiplyWordPoints(int currentWordPoints, int multiply) {
         return currentWordPoints * multiply;
@@ -155,30 +161,32 @@ public class GameType implements Serializable {
     protected int multiplyLetterPoints(Square letter) {
         int multiply = 1;
         switch (letter.getSquareType()) {
-            case Square.DL:
-                multiply *= 2;
-                break;
-            case Square.TL:
-                multiply *= 3;
-                break;
-            default:
-                multiply = 1;
-                break;
+        case Square.DL:
+            multiply *= 2;
+            break;
+        case Square.TL:
+            multiply *= 3;
+            break;
+        default:
+            multiply = 1;
+            break;
         }
         return multiply;
     }
 
     /**
      * 
-     * @return the variable for if this game mode should print points for each letter
+     * @return the variable for if this game mode should print points for each
+     *         letter
      */
     public boolean showPoints() {
         return this.showPoints;
     }
-    
+
     /**
      * 
-     * @return the variable for if this game mode should print multiply points explanation
+     * @return the variable for if this game mode should print multiply points
+     *         explanation
      */
     public boolean showMultiplyPoints() {
         return this.showMultiplyPoints;

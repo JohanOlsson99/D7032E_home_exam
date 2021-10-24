@@ -2,13 +2,13 @@ package Boards;
 
 import java.io.Serializable;
 
-public class Square implements Serializable{
+public class Square implements Serializable {
 
-    public static final int RL = 1; //regular letter
-    public static final int DL = 2; //double letter
-    public static final int TL = 3; //tripple letter
-    public static final int DW = 4; //double word
-    public static final int TW = 5; //tripple word
+    public static final int RL = 1; // regular letter
+    public static final int DL = 2; // double letter
+    public static final int TL = 3; // tripple letter
+    public static final int DW = 4; // double word
+    public static final int TW = 5; // tripple word
 
     // standard value is regular letter
     private int squareType = RL;
@@ -17,8 +17,9 @@ public class Square implements Serializable{
     /**
      * Creates an instance of a square
      */
-    public Square() { }
-    
+    public Square() {
+    }
+
     /**
      * Creates an instance of a square
      */
@@ -37,6 +38,7 @@ public class Square implements Serializable{
 
     /**
      * sets the type value of this square
+     * 
      * @param squareType the new type value
      */
     public void setSquareType(int squareType) {
@@ -53,6 +55,7 @@ public class Square implements Serializable{
 
     /**
      * sets the letter value of this square
+     * 
      * @param letter the new letter value to be placed at this square
      */
     public void setLetter(char letter) {

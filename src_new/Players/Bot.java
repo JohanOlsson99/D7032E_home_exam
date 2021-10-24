@@ -14,8 +14,9 @@ public class Bot extends Player {
 
     /**
      * initialize a random variable
+     * 
      * @param board the board that this player should have
-     * @param name the name this player should have
+     * @param name  the name this player should have
      */
     public Bot(Board board, String name) {
         super(board, name);
