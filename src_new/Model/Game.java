@@ -33,9 +33,6 @@ public class Game {
         new Game().startGame();
     }
 
-    public Game() {
-    }
-
     public void startGame() {
         this.loadLanguage();
         this.mainMenu();
@@ -103,7 +100,6 @@ public class Game {
             this.mainMenu();
             return;
         }
-        // this.declareWinner(players);
         this.calculateAndSendWinningMessage(players, thisPlayer);
         this.closeConnections(players);
         this.mainMenu();
@@ -213,7 +209,6 @@ public class Game {
     }
 
     private void loadLanguage() {
-        System.out.println(System.getProperty("user.dir"));
         this.path = System.getProperty("user.dir") + "\\data\\" + Settings.getLanguage() + "\\";
         this.gameController = new GameController(this.path + "menu\\", this.path + "menu\\");
         this.gameView = GameView.getInstance();
