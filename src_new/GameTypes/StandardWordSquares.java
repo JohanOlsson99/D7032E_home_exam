@@ -1,4 +1,5 @@
 package GameTypes;
+
 import Boards.Square;
 import Boards.Board;
 import java.util.ArrayList;
@@ -56,6 +57,5 @@ public class StandardWordSquares extends GameType {
     protected int multiplyLetterPoints(Square letter) {
         return 1;
     }
-    
-    
+
 }

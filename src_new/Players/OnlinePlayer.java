@@ -19,8 +19,9 @@ public class OnlinePlayer extends Player {
 
     /**
      * sets the disconnect message
+     * 
      * @param board the board that this player should have
-     * @param name the name this player should have
+     * @param name  the name this player should have
      */
     public OnlinePlayer(Board board, String name) {
         super(board, name);
@@ -48,8 +49,10 @@ public class OnlinePlayer extends Player {
     /**
      * 
      * @param port which port to listen for clients
-     * @throws ClientConnectionFailedException if something happens with the connection
-     * @throws PlayerDisconnectedException if something happens with the input output connection
+     * @throws ClientConnectionFailedException if something happens with the
+     *                                         connection
+     * @throws PlayerDisconnectedException     if something happens with the input
+     *                                         output connection
      */
     public void connectToClient(int port) throws ClientConnectionFailedException, PlayerDisconnectedException {
         ServerSocket serverSocket;
@@ -65,14 +68,16 @@ public class OnlinePlayer extends Player {
 
     /**
      * sends the board to the client
+     * 
      * @throws PlayerDisconnectedException if something happens with the connection
      */
     public void sendBoard() throws PlayerDisconnectedException {
         this.sendMessage(this.board);
     }
-    
+
     /**
      * send the player name
+     * 
      * @throws PlayerDisconnectedException if something happens with the connection
      */
     public void sendName() throws PlayerDisconnectedException {
@@ -81,6 +86,7 @@ public class OnlinePlayer extends Player {
 
     /**
      * sends the winner message to the client
+     * 
      * @param message message to send
      * @throws PlayerDisconnectedException if something happens with the connection
      */
@@ -90,6 +96,7 @@ public class OnlinePlayer extends Player {
 
     /**
      * tells the client to pick a letter
+     * 
      * @return the letter the client picked
      * @throws PlayerDisconnectedException if something happens with the connection
      */

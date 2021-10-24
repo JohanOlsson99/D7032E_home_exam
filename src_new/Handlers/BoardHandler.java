@@ -1,4 +1,5 @@
 package Handlers;
+
 import Boards.Board;
 import Boards.Square;
 import Boards.Errors.LetterIncorrectException;
@@ -14,7 +15,8 @@ public class BoardHandler {
 
     /**
      * Creates a boardHandler with wordHandler and letterHandler
-     * @param wordFilePath file path to words.txt
+     * 
+     * @param wordFilePath   file path to words.txt
      * @param letterFilePath file path to letter.txt
      */
     public BoardHandler(String wordFilePath, String letterFilePath) {
@@ -26,8 +28,10 @@ public class BoardHandler {
 
     /**
      * Gets all possible words from a 2D-array of squares
+     * 
      * @param boardSquare a 2D-array of squares
-     * @return a 2D-list with all square words that exists in the 2D-array of squares
+     * @return a 2D-list with all square words that exists in the 2D-array of
+     *         squares
      */
     public ArrayList<Square[]> findAllWords(Square[][] boardSquare) {
 
@@ -35,14 +39,16 @@ public class BoardHandler {
         allWords.addAll(this.getAllRowWords(boardSquare));
 
         allWords.addAll(this.getAllColWords(boardSquare));
-        
+
         allWords.addAll(this.getAllDiagWords(boardSquare));
 
         return allWords;
     }
 
-    public static void main(String[] args) throws WrongBoardSizeException, IndexOutOfBoundsException, PlaceStringIncorrectException, PlaceAlreadyTakenException, LetterIncorrectException {
-        BoardHandler boardHandler = new BoardHandler(System.getProperty("user.dir") + "\\Tests\\data\\", System.getProperty("user.dir") + "\\Tests\\data\\");
+    public static void main(String[] args) throws WrongBoardSizeException, IndexOutOfBoundsException,
+            PlaceStringIncorrectException, PlaceAlreadyTakenException, LetterIncorrectException {
+        BoardHandler boardHandler = new BoardHandler(System.getProperty("user.dir") + "\\Tests\\data\\",
+                System.getProperty("user.dir") + "\\Tests\\data\\");
         Board board = new Board(3, 3);
         board.updateGameBoard('A', "a0");
         board.updateGameBoard('A', "a1");
@@ -98,13 +104,13 @@ public class BoardHandler {
             }
             diagWordsSquare.addAll(this.getAllWordsFromSquare(diagWordSquares.toArray(new Square[0])));
         }
-        
+
         // takes out all diagonal words from middle + 1 to right
         for (int col = 1; col < board.length; col++) {
             int tempCol = col;
             int tempRow = 0;
             ArrayList<Square> diagWordSquares = new ArrayList<Square>();
-            while ((tempRow < board.length) && (tempCol < board[col].length) ) {
+            while ((tempRow < board.length) && (tempCol < board[col].length)) {
                 diagWordSquares.add(board[tempRow][tempCol]);
                 tempRow++;
                 tempCol++;
@@ -114,7 +120,7 @@ public class BoardHandler {
 
         return diagWordsSquare;
     }
-    
+
     private ArrayList<Square[]> getAllWordsFromSquare(Square[] word) {
         ArrayList<Square[]> listOfWords = new ArrayList<Square[]>();
         for (int i = 0; i < word.length; i++) {
@@ -122,7 +128,7 @@ public class BoardHandler {
                 // substring to check if word exists later
                 String subString = "";
                 // substring square to return if the word exists
-                Square[] subStringSquare = new Square[j-i];
+                Square[] subStringSquare = new Square[j - i];
                 int index = 0;
                 for (int k = i; k < j; k++) {
                     subString += word[k].getLetter();

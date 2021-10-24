@@ -1,4 +1,5 @@
 package Players;
+
 import Boards.Board;
 import Boards.Errors.LetterIncorrectException;
 import Boards.Errors.PlaceAlreadyTakenException;
@@ -31,8 +32,9 @@ public class Player {
 
     /**
      * sets the disconnect message
+     * 
      * @param board the board that this player should have
-     * @param name the name this player should have
+     * @param name  the name this player should have
      */
     public Player(Board board, String name) {
         this.board = board;
@@ -42,6 +44,7 @@ public class Player {
 
     /**
      * sets this player's points
+     * 
      * @param points this players points
      */
     public void setPoints(int points) {
@@ -50,6 +53,7 @@ public class Player {
 
     /**
      * get this player's points
+     * 
      * @return this players points
      */
     public int getPoints() {
@@ -58,6 +62,7 @@ public class Player {
 
     /**
      * get this player's name
+     * 
      * @return this player's name
      */
     public String getName() {
@@ -66,7 +71,8 @@ public class Player {
 
     /**
      * place a letter for this player
-     * @param letter the letter to be placed
+     * 
+     * @param letter         the letter to be placed
      * @param gameController a gameController
      * @return the place this player choose
      */
@@ -86,16 +92,14 @@ public class Player {
         return place;
     }
 
-    protected void placeLetterOnBoard(char letter, String place) throws
-            IndexOutOfBoundsException,
-            PlaceStringIncorrectException,
-            PlaceAlreadyTakenException,
-            LetterIncorrectException {
+    protected void placeLetterOnBoard(char letter, String place) throws IndexOutOfBoundsException,
+            PlaceStringIncorrectException, PlaceAlreadyTakenException, LetterIncorrectException {
         this.board.updateGameBoard(letter, place);
     }
 
     /**
      * get the player to pick a letter
+     * 
      * @param gameController a gameController
      * @return the letter the player choose
      */
@@ -121,6 +125,7 @@ public class Player {
 
     /**
      * listens for the board from the server
+     * 
      * @throws PlayerDisconnectedException if something happens with the connection
      */
     public void getBoardMessage() throws PlayerDisconnectedException {
@@ -131,9 +136,10 @@ public class Player {
             throw new PlayerDisconnectedException(this.disconnectMessage);
         }
     }
-    
+
     /**
      * listens for the name from the server
+     * 
      * @throws PlayerDisconnectedException if something happens with the connection
      */
     public void getNameMessage() throws PlayerDisconnectedException {
@@ -147,12 +153,16 @@ public class Player {
 
     /**
      * tries to connect to the server
+     * 
      * @param ipAdress the ip address which the server is at
-     * @param port the port the server listens at
-     * @throws ServerConnectionFailedException if connection to the server was not possible
-     * @throws PlayerDisconnectedException if something happens with the connection
+     * @param port     the port the server listens at
+     * @throws ServerConnectionFailedException if connection to the server was not
+     *                                         possible
+     * @throws PlayerDisconnectedException     if something happens with the
+     *                                         connection
      */
-    public void connectToServer(String ipAdress, int port) throws ServerConnectionFailedException, PlayerDisconnectedException {
+    public void connectToServer(String ipAdress, int port)
+            throws ServerConnectionFailedException, PlayerDisconnectedException {
         try {
             this.connection = new Socket(ipAdress, port);
             this.setInputOutputStream();
@@ -184,6 +194,7 @@ public class Player {
 
     /**
      * listens for a message and then returns it
+     * 
      * @return the object which was sent to this player
      * @throws PlayerDisconnectedException if something happens with the connection
      */
@@ -198,6 +209,7 @@ public class Player {
 
     /**
      * sends a message
+     * 
      * @param message the message to send
      * @throws PlayerDisconnectedException if something happens with the connection
      */
@@ -209,5 +221,5 @@ public class Player {
             throw new PlayerDisconnectedException(this.disconnectMessage);
         }
     }
-    
+
 }
