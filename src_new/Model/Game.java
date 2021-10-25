@@ -423,8 +423,8 @@ public class Game {
         return thisPlayer;
     }
 
-    private void handelError(String e) {
-        this.gameView.printErr(e);
+    private void handelError(String error) {
+        this.gameView.printErr(error);
         this.mainMenu();
     }
 
