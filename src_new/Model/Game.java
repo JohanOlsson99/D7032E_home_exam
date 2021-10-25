@@ -96,10 +96,9 @@ public class Game {
                 return;
             }
         }
-        this.gameRunner = new GameRunner(players, thisPlayer, this.gameType, this.gameController);
+        this.gameRunner = new GameRunner(this.gameType, this.gameController);
         try {
-            this.gameRunner.run();
-            players = this.gameRunner.getPlayers();
+            this.gameRunner.run(players, thisPlayer);
         } catch (PlayerDisconnectedException e) {
             this.gameView.printErr(e.getMessage());
             this.closeConnections(players);
@@ -267,8 +266,8 @@ public class Game {
                 return;
             }
             try {
-                this.gameRunner = new GameRunner(null, player, this.gameType, this.gameController);
-                this.gameRunner.runOnline();
+                this.gameRunner = new GameRunner(this.gameType, this.gameController);
+                this.gameRunner.runOnline(player);
                 this.mainMenu();
             } catch (PlayerDisconnectedException e) {
                 this.handelError(e.getMessage());

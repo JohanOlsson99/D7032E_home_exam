@@ -13,8 +13,6 @@ import Players.Exceptions.PlayerDisconnectedException;
 import View.GameView;
 
 public class GameRunner {
-    private Player[] players;
-    private Player thisPlayer;
     private GameController gameController;
     private GameView gameView;
     private GameType gameType;
@@ -22,14 +20,10 @@ public class GameRunner {
     /**
      * instantiate the class with all it's parameters
      * 
-     * @param players        all players that are in the game
-     * @param thisPlayer     the player that are on this computer
      * @param gameType       the game type
      * @param gameController the game controller for this player
      */
-    public GameRunner(Player[] players, Player thisPlayer, GameType gameType, GameController gameController) {
-        this.players = players;
-        this.thisPlayer = thisPlayer;
+    public GameRunner(GameType gameType, GameController gameController) {
         this.gameType = gameType;
         this.gameView = GameView.getInstance();
         this.gameController = gameController;
@@ -38,80 +32,74 @@ public class GameRunner {
     /**
      * Runs the game sequentially, decide which player to place and pick letter.
      * 
+     * @param players    all players that are in the game
+     * @param thisPlayer the player that are on this computer
      * @throws PlayerDisconnectedException if the player has disconnected
      */
-    public void run() throws PlayerDisconnectedException {
+    public void run(Player[] players, Player thisPlayer) throws PlayerDisconnectedException {
         int turn = 0;
-        int index = this.gameType.getRandomStartPlayer(this.players.length);
+        int index = this.gameType.getRandomStartPlayer(players.length);
         while (turn < (Settings.getRowSize() * Settings.getColSize())) {
-            index = index % this.players.length;
-            if (this.thisPlayer != null) {
-                this.gameView.print(this.thisPlayer.getBoard().toString(this.gameType.showPoints(),
-                        this.gameType.showMultiplyPoints()));
+            index = index % players.length;
+            if (thisPlayer != null) {
+                this.gameView.print(
+                        thisPlayer.getBoard().toString(this.gameType.showPoints(), this.gameType.showMultiplyPoints()));
             }
             char letter = '\0';
-            if (this.players[index] instanceof OnlinePlayer) {
-                letter = ((OnlinePlayer) this.players[index]).pickLetter();
-            } else if (this.players[index] instanceof Bot) {
-                letter = ((Bot) this.players[index]).pickLetter();
-            } else if (this.players[index] instanceof Player) {
-                letter = this.players[index].pickLetter(gameController);
+            if (players[index] instanceof OnlinePlayer) {
+                letter = ((OnlinePlayer) players[index]).pickLetter();
+            } else if (players[index] instanceof Bot) {
+                letter = ((Bot) players[index]).pickLetter();
+            } else if (players[index] instanceof Player) {
+                letter = players[index].pickLetter(gameController);
             }
-            this.placeLetterForAllPlayers(letter);
+            this.placeLetterForAllPlayers(letter, players, thisPlayer);
             turn++;
             index++;
         }
-        if (this.thisPlayer != null) {
-            this.gameView.print(this.thisPlayer.getBoard().toString(this.gameType.showPoints(),
-                    this.gameType.showMultiplyPoints()));
+        if (thisPlayer != null) {
+            this.gameView.print(
+                    thisPlayer.getBoard().toString(this.gameType.showPoints(), this.gameType.showMultiplyPoints()));
         }
-    }
-
-    /**
-     * 
-     * @return the players
-     */
-    public Player[] getPlayers() {
-        return this.players;
     }
 
     /**
      * Runs the game sequentially, gets from the server what this player are suppose
      * to do.
      * 
+     * @param player the player that are on this computer
      * @throws PlayerDisconnectedException if you have disconnected from the server
      */
-    public void runOnline() throws PlayerDisconnectedException {
+    public void runOnline(Player player) throws PlayerDisconnectedException {
         while (true) {
             String message;
-            message = (String) this.thisPlayer.getNextMessage();
+            message = (String) player.getNextMessage();
             if (message.contains(Player.PICK_LETTER_ONLINE)) {
                 // pick letter
-                char letter = this.thisPlayer.pickLetter(this.gameController);
-                this.thisPlayer.sendMessage(letter);
+                char letter = player.pickLetter(this.gameController);
+                player.sendMessage(letter);
             } else if (message.contains(Player.PLACE_LETTER_ONLINE)) {
                 char letter = message.split(":")[1].replaceAll(" ", "").charAt(0);
-                String place = this.thisPlayer.placeLetter(letter, this.gameController);
-                this.thisPlayer.sendMessage(place);
-                this.gameView.print(this.thisPlayer.getBoard().toString(this.gameType.showPoints(),
-                        this.gameType.showMultiplyPoints()));
+                String place = player.placeLetter(letter, this.gameController);
+                player.sendMessage(place);
+                this.gameView.print(
+                        player.getBoard().toString(this.gameType.showPoints(), this.gameType.showMultiplyPoints()));
             } else if (message.contains(Player.WINNER_MESSAGE_ONLINE)) {
                 String winMsg = message.replace(Player.WINNER_MESSAGE_ONLINE, "");
-                winMsg = winMsg.replace(this.thisPlayer.getName(), "You");
+                winMsg = winMsg.replace(player.getName(), "You");
                 winMsg = winMsg.replaceAll("Player", "Online player");
                 this.gameView.print(winMsg);
                 break;
             }
         }
-        this.thisPlayer.closeConnection();
-        // this.mainMenu();
+        player.closeConnection();
     }
 
-    private void placeLetterForAllPlayers(char letter) {
-        ExecutorService threadpool = Executors.newFixedThreadPool(this.players.length);
-        for (Player player : this.players) {
+    private void placeLetterForAllPlayers(char letter, Player[] players, Player thisPlayer) {
+        ExecutorService threadpool = Executors.newFixedThreadPool(players.length);
+        for (Player player : players) {
             Runnable task = null;
-            if (player instanceof Player && player == this.thisPlayer) {
+            if (player instanceof Player && player == thisPlayer) {
                 task = new Runnable() {
                     @Override
                     public void run() {

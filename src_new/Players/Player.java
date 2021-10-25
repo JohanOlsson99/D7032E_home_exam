@@ -159,10 +159,10 @@ public class Player {
      * @throws PlayerDisconnectedException     if something happens with the
      *                                         connection
      */
-    public void connectToServer(String ipAdress, int port)
+    public void connectToServer(String ipAddress, int port)
             throws ServerConnectionFailedException, PlayerDisconnectedException {
         try {
-            this.connection = new Socket(ipAdress, port);
+            this.connection = new Socket(ipAddress, port);
             this.setInputOutputStream();
         } catch (IOException e) {
             throw new ServerConnectionFailedException("Server connection failed, try again");
