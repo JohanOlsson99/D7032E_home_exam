@@ -21,14 +21,6 @@ public class Square implements Serializable {
     }
 
     /**
-     * Creates an instance of a square
-     */
-    public Square(char letter, int squareType) {
-        this.squareType = squareType;
-        this.letter = letter;
-    }
-
-    /**
      * 
      * @return this square type
      */

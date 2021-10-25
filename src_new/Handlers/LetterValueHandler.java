@@ -33,6 +33,7 @@ public class LetterValueHandler implements Serializable {
      * @param filePath file path to the file letter.txt
      */
     public void readFromFile(String filePath) {
+        this.letterValues = new HashMap<Character, Integer>();
         FileReader fileReader;
         try {
             fileReader = new FileReader(filePath + "letter.txt");

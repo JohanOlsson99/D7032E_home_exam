@@ -1,12 +1,6 @@
 package Handlers;
 
-import Boards.Board;
 import Boards.Square;
-import Boards.Errors.LetterIncorrectException;
-import Boards.Errors.PlaceAlreadyTakenException;
-import Boards.Errors.PlaceStringIncorrectException;
-import Boards.Errors.WrongBoardSizeException;
-
 import java.util.ArrayList;
 
 public class BoardHandler {
@@ -43,24 +37,6 @@ public class BoardHandler {
         allWords.addAll(this.getAllDiagWords(boardSquare));
 
         return allWords;
-    }
-
-    public static void main(String[] args) throws WrongBoardSizeException, IndexOutOfBoundsException,
-            PlaceStringIncorrectException, PlaceAlreadyTakenException, LetterIncorrectException {
-        BoardHandler boardHandler = new BoardHandler(System.getProperty("user.dir") + "\\Tests\\data\\",
-                System.getProperty("user.dir") + "\\Tests\\data\\");
-        Board board = new Board(3, 3);
-        board.updateGameBoard('A', "a0");
-        board.updateGameBoard('A', "a1");
-        board.updateGameBoard('A', "a2");
-        board.updateGameBoard('B', "b0");
-        board.updateGameBoard('B', "b1");
-        board.updateGameBoard('B', "b2");
-        board.updateGameBoard('C', "c0");
-        board.updateGameBoard('C', "c1");
-        board.updateGameBoard('C', "c2");
-        ArrayList<Square[]> words = boardHandler.findAllWords(board.getGameBoard());
-        System.out.println(words.size());
     }
 
     private ArrayList<Square[]> getAllRowWords(Square[][] board) {

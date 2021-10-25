@@ -34,6 +34,7 @@ public class WordHandler {
      * @param filePath filepath to words.txt
      */
     public void readFromFile(String filePath) {
+        this.words = new HashSet<String>();
         try {
             FileReader fileReader = new FileReader(filePath + "words.txt");
             BufferedReader bufferedReader = new BufferedReader(fileReader);

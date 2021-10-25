@@ -1,7 +1,6 @@
 package Model;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import GameTypes.GameType;
@@ -29,10 +28,9 @@ public class Game {
     private String path;
     private GameRunner gameRunner;
 
-    public static void main(String[] args) throws ClassNotFoundException, IOException {
-        new Game().startGame();
-    }
-
+    /**
+     * Loads the pre defined language and start up the game with main menu
+     */
     public void startGame() {
         this.loadLanguage();
         this.mainMenu();
@@ -75,6 +73,7 @@ public class Game {
                 ((OnlinePlayer) players[i]).sendBoard();
                 ((OnlinePlayer) players[i]).sendName();
                 ((OnlinePlayer) players[i]).sendMessage(this.gameType);
+                ((OnlinePlayer) players[i]).sendMessage(Settings.getLanguage());
                 this.gameView.print("Connected on port: " + Settings.getPortNumber() + " with " + players[i].getName());
             } catch (PlayerDisconnectedException | ClientConnectionFailedException e) {
                 handelError(e.getMessage());
@@ -406,6 +405,8 @@ public class Game {
             thisPlayer.getBoardMessage();
             thisPlayer.getNameMessage();
             this.gameType = (GameType) thisPlayer.getNextMessage();
+            Settings.setLanguage((String) thisPlayer.getNextMessage());
+            this.loadLanguage();
         } catch (PlayerDisconnectedException | ServerConnectionFailedException e) {
             throw new ServerConnectionFailedException(e.getMessage());
         }
