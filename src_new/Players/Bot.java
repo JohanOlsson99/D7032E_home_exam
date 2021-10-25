@@ -1,10 +1,9 @@
 package Players;
 
 import Boards.Board;
-import Boards.Errors.LetterIncorrectException;
-import Boards.Errors.PlaceAlreadyTakenException;
-import Boards.Errors.PlaceStringIncorrectException;
-import Boards.Errors.WrongBoardSizeException;
+import Boards.Exceptions.LetterIncorrectException;
+import Boards.Exceptions.PlaceAlreadyTakenException;
+import Boards.Exceptions.PlaceStringIncorrectException;
 import Controller.GameController;
 import java.util.Random;
 

@@ -1,5 +1,6 @@
 import static org.junit.Assert.*;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import org.junit.Before;
@@ -7,20 +8,20 @@ import org.junit.Test;
 
 import Boards.Board;
 import Boards.Square;
-import Boards.Errors.LetterIncorrectException;
-import Boards.Errors.PlaceAlreadyTakenException;
-import Boards.Errors.PlaceStringIncorrectException;
-import Boards.Errors.WrongBoardSizeException;
+import Boards.Exceptions.LetterIncorrectException;
+import Boards.Exceptions.PlaceAlreadyTakenException;
+import Boards.Exceptions.PlaceStringIncorrectException;
+import Boards.Exceptions.WrongBoardSizeException;
 import Handlers.BoardHandler;
 import Handlers.WordHandler;
 
 public class TestBoardHandler {
     private BoardHandler boardHandler;
     private WordHandler wordHandler;
-    public String path = "C:\\Users\\Johan\\Documents\\skolan\\D7032_programvaruteknik\\D7032E_home_exam\\Tests\\data\\";
+    public static String path = "C:\\Users\\Johol\\Documents\\skolan\\D7032E_software_engineering\\D7032E_home_exam\\Tests\\data\\";
 
     @Before
-    public void init() {
+    public void init() throws FileNotFoundException {
         this.boardHandler = new BoardHandler(this.path, this.path);
         this.wordHandler = WordHandler.getInstance();
     }

@@ -1,5 +1,7 @@
 import static org.junit.Assert.*;
 
+import java.io.FileNotFoundException;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -10,9 +12,9 @@ public class TestLetterHandler {
     private LetterValueHandler letterValueHandler;
 
     @Before
-    public void init() {
+    public void init() throws FileNotFoundException {
         this.letterValueHandler = LetterValueHandler.getInstance();
-        this.letterValueHandler.readFromFile(new TestBoardHandler().path);
+        this.letterValueHandler.readFromFile(TestBoardHandler.path);
     }
 
     @Test

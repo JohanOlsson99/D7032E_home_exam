@@ -1,4 +1,4 @@
-package Players.Errors;
+package Players.Exceptions;
 
 public class ServerConnectionFailedException extends Exception {
     

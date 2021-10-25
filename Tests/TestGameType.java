@@ -1,5 +1,6 @@
 import static org.junit.Assert.*;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import org.junit.Before;
@@ -7,7 +8,7 @@ import org.junit.Test;
 
 import Boards.Board;
 import Boards.Square;
-import Boards.Errors.WrongBoardSizeException;
+import Boards.Exceptions.WrongBoardSizeException;
 import GameTypes.GameType;
 import GameTypes.ScrabbleSquares;
 import GameTypes.StandardWordSquares;
@@ -18,7 +19,7 @@ public class TestGameType {
 
     @Test
     public void testStandardWordSquares() {
-        StandardWordSquares standardSquare = new StandardWordSquares(GameType.boardStandard);
+        StandardWordSquares standardSquare = new StandardWordSquares(GameType.BOARD_STANDARD);
         ArrayList<Square[]> words = new ArrayList<Square[]>();
         // test a three length word = 1 point
         words.add(new Square[] { new Square('A', 1), new Square('A', 1), new Square('A', 1)});
@@ -41,10 +42,10 @@ public class TestGameType {
     }
     
     @Test
-    public void testScrabbleWordSquares() {
+    public void testScrabbleWordSquares() throws FileNotFoundException {
         LetterValueHandler.getInstance().readFromFile(new TestBoardHandler().path);
 
-        ScrabbleSquares scrabbleSquare = new ScrabbleSquares(GameType.boardStandard);
+        ScrabbleSquares scrabbleSquare = new ScrabbleSquares(GameType.BOARD_STANDARD);
         ArrayList<Square[]> words = new ArrayList<Square[]>();
         // 8 points
         words.add(new Square[] { new Square('A', Square.RL), new Square('A', Square.RL), new Square('C', Square.RL) });
@@ -76,10 +77,10 @@ public class TestGameType {
     }
 
     @Test
-    public void testGameBoardPreDefined() throws WrongBoardSizeException {
+    public void testGameBoardPreDefined() throws WrongBoardSizeException, FileNotFoundException {
         LetterValueHandler.getInstance().readFromFile(new TestBoardHandler().path);
 
-        ScrabbleSquares scrabbleSquare = new ScrabbleSquares(GameType.boardPreDefined);
+        ScrabbleSquares scrabbleSquare = new ScrabbleSquares(GameType.BOARD_PRE_DEFINED);
         Board board = scrabbleSquare.initBoard(new TestBoardHandler().path, 3, 3);
         Square[][] squares = board.getGameBoard();
         assertEquals(Square.TW, squares[0][0].getSquareType());
@@ -94,10 +95,10 @@ public class TestGameType {
     }
    
     @Test
-    public void testGameBoard() throws WrongBoardSizeException {
+    public void testGameBoard() throws WrongBoardSizeException, FileNotFoundException {
         LetterValueHandler.getInstance().readFromFile(new TestBoardHandler().path);
 
-        ScrabbleSquares scrabbleSquare = new ScrabbleSquares(GameType.boardStandard);
+        ScrabbleSquares scrabbleSquare = new ScrabbleSquares(GameType.BOARD_STANDARD);
         Board board = scrabbleSquare.initBoard(new TestBoardHandler().path, 3, 3);
         Square[][] squares = board.getGameBoard();
         assertEquals(Square.RL, squares[0][0].getSquareType());
@@ -113,7 +114,7 @@ public class TestGameType {
 
     @Test
     public void testDifferentStartIndex() {
-        GameType gameType = new GameType(GameType.boardStandard);
+        GameType gameType = new GameType(GameType.BOARD_STANDARD);
         int startPlayer = gameType.getRandomStartPlayer(10);
         boolean otherStartIndex = false;
         for (int i = 0; i < 100000; i++) {

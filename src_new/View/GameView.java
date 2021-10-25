@@ -1,7 +1,5 @@
 package View;
 
-import java.io.FileReader;
-import java.io.BufferedReader;
 import java.util.ArrayList;
 import Players.Player;
 

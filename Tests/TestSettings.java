@@ -2,10 +2,10 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import Boards.Errors.WrongBoardSizeException;
+import Boards.Exceptions.WrongBoardSizeException;
 import Model.Settings;
-import Model.Errors.NumberOfBotsWrongException;
-import Model.Errors.NumberOfPlayerWrongException;
+import Model.Exceptions.NumberOfBotsWrongException;
+import Model.Exceptions.NumberOfPlayerWrongException;
 
 public class TestSettings {
 

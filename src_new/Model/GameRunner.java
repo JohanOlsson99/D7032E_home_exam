@@ -9,7 +9,7 @@ import GameTypes.GameType;
 import Players.Bot;
 import Players.OnlinePlayer;
 import Players.Player;
-import Players.Errors.PlayerDisconnectedException;
+import Players.Exceptions.PlayerDisconnectedException;
 import View.GameView;
 
 public class GameRunner {
@@ -85,18 +85,18 @@ public class GameRunner {
         while (true) {
             String message;
             message = (String) this.thisPlayer.getNextMessage();
-            if (message.contains(Player.pickLetterOnline)) {
+            if (message.contains(Player.PICK_LETTER_ONLINE)) {
                 // pick letter
                 char letter = this.thisPlayer.pickLetter(this.gameController);
                 this.thisPlayer.sendMessage(letter);
-            } else if (message.contains(Player.placeLetterOnline)) {
+            } else if (message.contains(Player.PLACE_LETTER_ONLINE)) {
                 char letter = message.split(":")[1].replaceAll(" ", "").charAt(0);
                 String place = this.thisPlayer.placeLetter(letter, this.gameController);
                 this.thisPlayer.sendMessage(place);
                 this.gameView.print(this.thisPlayer.getBoard().toString(this.gameType.showPoints(),
                         this.gameType.showMultiplyPoints()));
-            } else if (message.contains(Player.winnerMessageOnline)) {
-                String winMsg = message.replace(Player.winnerMessageOnline, "");
+            } else if (message.contains(Player.WINNER_MESSAGE_ONLINE)) {
+                String winMsg = message.replace(Player.WINNER_MESSAGE_ONLINE, "");
                 winMsg = winMsg.replace(this.thisPlayer.getName(), "You");
                 winMsg = winMsg.replaceAll("Player", "Online player");
                 this.gameView.print(winMsg);

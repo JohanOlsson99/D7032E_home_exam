@@ -1,7 +1,7 @@
 package GameTypes;
 
 import Boards.Square;
-import Boards.Errors.WrongBoardSizeException;
+import Boards.Exceptions.WrongBoardSizeException;
 import Boards.Board;
 import Handlers.LetterValueHandler;
 
@@ -18,9 +18,9 @@ public class GameType implements Serializable {
 
     private int boardType;
 
-    public static final int boardStandard = 1;
-    public static final int boardPreDefined = 2;
-    public static final int boardRandom = 3;
+    public static final int BOARD_STANDARD = 1;
+    public static final int BOARD_PRE_DEFINED = 2;
+    public static final int BOARD_RANDOM = 3;
 
     protected boolean showPoints = true;
     protected boolean showMultiplyPoints = true;
@@ -36,11 +36,11 @@ public class GameType implements Serializable {
         this.random = new Random();
     }
 
-    public Board initBoard(String filePath, int width, int height) throws WrongBoardSizeException {
+    public Board initBoard(String filePath, int width, int height) throws WrongBoardSizeException, FileNotFoundException {
         Board board = new Board(width, height);
-        if (this.boardType == this.boardRandom) {
+        if (this.boardType == GameType.BOARD_RANDOM) {
             this.setTileRandom(board);
-        } else if (this.boardType == this.boardPreDefined) {
+        } else if (this.boardType == GameType.BOARD_PRE_DEFINED) {
             this.setTile(filePath + "tilePreDefined.txt", board);
         } else {
             this.setTile(filePath + "tile.txt", board);
@@ -56,7 +56,7 @@ public class GameType implements Serializable {
         }
     }
 
-    protected void setTile(String filePath, Board board) {
+    protected void setTile(String filePath, Board board) throws FileNotFoundException {
         FileReader fileReader;
         try {
             fileReader = new FileReader(filePath);
@@ -74,11 +74,10 @@ public class GameType implements Serializable {
                 }
                 row++;
             }
+            fileReader.close();
             bufferedReader.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new FileNotFoundException("The file to get the board could not be found");
         }
     }
 
@@ -119,6 +118,9 @@ public class GameType implements Serializable {
                     break;
                 case Square.TW:
                     wordMultiplier *= 3;
+                    break;
+                default:
+                    wordMultiplier *= 1;
                     break;
                 }
                 wordPoints += letterPoints;

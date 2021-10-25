@@ -1,25 +1,23 @@
 package Players;
 
 import Boards.Board;
-import Boards.Errors.LetterIncorrectException;
-import Boards.Errors.PlaceAlreadyTakenException;
-import Boards.Errors.PlaceStringIncorrectException;
-import Boards.Errors.WrongBoardSizeException;
+import Boards.Exceptions.LetterIncorrectException;
+import Boards.Exceptions.PlaceAlreadyTakenException;
+import Boards.Exceptions.PlaceStringIncorrectException;
 import Controller.GameController;
-import Players.Errors.PlayerDisconnectedException;
-import Players.Errors.ServerConnectionFailedException;
+import Players.Exceptions.PlayerDisconnectedException;
+import Players.Exceptions.ServerConnectionFailedException;
 
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.io.ObjectOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
 public class Player {
 
-    public static final String pickLetterOnline = "Pick letter";
-    public static final String placeLetterOnline = "Place letter: ";
-    public static final String winnerMessageOnline = "Winner: ";
+    public static final String PICK_LETTER_ONLINE = "Pick letter";
+    public static final String PLACE_LETTER_ONLINE = "Place letter: ";
+    public static final String WINNER_MESSAGE_ONLINE = "Winner: ";
 
     protected Board board;
     private String name;
@@ -77,7 +75,7 @@ public class Player {
      * @return the place this player choose
      */
     public String placeLetter(char letter, GameController gameController) {
-        String place; // = this.pickPlace(letter, gameController);
+        String place;
         do {
             place = this.pickPlace(letter, gameController);
             try {

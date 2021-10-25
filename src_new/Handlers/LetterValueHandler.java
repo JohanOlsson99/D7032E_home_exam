@@ -3,8 +3,6 @@ package Handlers;
 import java.util.HashMap;
 import java.io.*;
 
-import java.io.Serializable;
-
 public class LetterValueHandler implements Serializable {
     private HashMap<Character, Integer> letterValues;
     private static LetterValueHandler INSTANCE;
@@ -31,8 +29,10 @@ public class LetterValueHandler implements Serializable {
      * these letters with points for each
      * 
      * @param filePath file path to the file letter.txt
+     * @throws FileNotFoundException if the file letter.txt was not found or error
+     *                               while reading it
      */
-    public void readFromFile(String filePath) {
+    public void readFromFile(String filePath) throws FileNotFoundException {
         this.letterValues = new HashMap<Character, Integer>();
         FileReader fileReader;
         try {
@@ -46,11 +46,10 @@ public class LetterValueHandler implements Serializable {
                     this.setValue(letters.charAt(i), Integer.parseInt(data[1].replace(" ", "")));
                 }
             }
+            fileReader.close();
             bufferedReader.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new FileNotFoundException("The file letter.txt not found");
         }
     }
 

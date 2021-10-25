@@ -2,6 +2,7 @@ package Controller;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -122,8 +123,9 @@ public class GameController {
                     mainText += line + "\n";
                 }
             }
+            fileReader.close();
             bufferedReader.close();
-        } catch (Exception e) {
+        } catch (IOException e) {
             gameView.printErr(e.getMessage());
         }
         gameView.setMainText(mainText);
@@ -148,8 +150,9 @@ public class GameController {
                     optionsStrings.add(line);
                 }
             }
+            fileReader.close();
             bufferedReader.close();
-        } catch (Exception e) {
+        } catch (IOException e) {
             GameView.getInstance().printErr(e.getMessage());
         }
         GameView.getInstance().setSettingsText(settingsText, optionsStrings.toArray(new String[0]));

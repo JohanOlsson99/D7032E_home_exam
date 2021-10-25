@@ -1,23 +1,24 @@
 package Model;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
+import Boards.Exceptions.WrongBoardSizeException;
 import GameTypes.GameType;
 import GameTypes.ScrabbleSquares;
 import GameTypes.StandardWordSquares;
 import Handlers.BoardHandler;
-import Model.Errors.NumberOfBotsWrongException;
-import Model.Errors.NumberOfPlayerWrongException;
-import Model.Errors.PortNumberWrongException;
+import Model.Exceptions.NumberOfBotsWrongException;
+import Model.Exceptions.NumberOfPlayerWrongException;
+import Model.Exceptions.PortNumberWrongException;
 import Players.Bot;
 import Players.OnlinePlayer;
 import Players.Player;
-import Players.Errors.ClientConnectionFailedException;
-import Players.Errors.PlayerDisconnectedException;
-import Players.Errors.ServerConnectionFailedException;
+import Players.Exceptions.ClientConnectionFailedException;
+import Players.Exceptions.PlayerDisconnectedException;
+import Players.Exceptions.ServerConnectionFailedException;
 import View.GameView;
-import Boards.Errors.WrongBoardSizeException;
 import Controller.GameController;
 
 public class Game {
@@ -43,7 +44,13 @@ public class Game {
      *                                                 is too low
      */
     private void initGame() {
-        this.boardHandler = new BoardHandler(this.path, this.path);
+        try {
+            this.boardHandler = new BoardHandler(this.path, this.path);
+        } catch (FileNotFoundException e) {
+            this.gameView.printErr(e.getMessage());
+            this.mainMenu();
+            return;
+        }
 
         Player[] players = new Player[Settings.getNumOfPlayers() + Settings.getNumOfBots()];
         Player thisPlayer = null;
@@ -51,7 +58,7 @@ public class Game {
             try {
                 players[0] = new Player(
                         this.gameType.initBoard(this.path, Settings.getRowSize(), Settings.getColSize()), "Player 1");
-            } catch (WrongBoardSizeException e) {
+            } catch (WrongBoardSizeException | FileNotFoundException e) {
                 handelError(e.getMessage());
                 return;
             }
@@ -63,7 +70,7 @@ public class Game {
                 players[i] = new OnlinePlayer(
                         this.gameType.initBoard(this.path, Settings.getRowSize(), Settings.getColSize()),
                         "Online player " + i);
-            } catch (WrongBoardSizeException e) {
+            } catch (WrongBoardSizeException | FileNotFoundException e) {
                 handelError(e.getMessage());
                 return;
             }
@@ -84,7 +91,7 @@ public class Game {
             try {
                 players[j] = new Bot(this.gameType.initBoard(this.path, Settings.getRowSize(), Settings.getColSize()),
                         "Bot " + j);
-            } catch (WrongBoardSizeException e) {
+            } catch (WrongBoardSizeException | FileNotFoundException e) {
                 handelError(e.getMessage());
                 return;
             }
@@ -220,12 +227,12 @@ public class Game {
         switch (input) {
         case "1":
             // play standard
-            this.gameType = new StandardWordSquares(GameType.boardStandard);
+            this.gameType = new StandardWordSquares(GameType.BOARD_STANDARD);
             this.initGame();
             break;
         case "2":
             // play scrabble
-            this.gameType = new ScrabbleSquares(GameType.boardStandard);
+            this.gameType = new ScrabbleSquares(GameType.BOARD_STANDARD);
             this.initGame();
             break;
         case "3":
@@ -236,7 +243,7 @@ public class Game {
             } catch (WrongBoardSizeException e) {
                 // Nothing wrong with these values
             }
-            this.gameType = new ScrabbleSquares(GameType.boardPreDefined);
+            this.gameType = new ScrabbleSquares(GameType.BOARD_PRE_DEFINED);
             this.initGame();
             break;
         case "4":
@@ -247,7 +254,7 @@ public class Game {
             } catch (WrongBoardSizeException e) {
                 // Nothing wrong with these values
             }
-            this.gameType = new ScrabbleSquares(GameType.boardRandom);
+            this.gameType = new ScrabbleSquares(GameType.BOARD_RANDOM);
             this.initGame();
             break;
         case "5":

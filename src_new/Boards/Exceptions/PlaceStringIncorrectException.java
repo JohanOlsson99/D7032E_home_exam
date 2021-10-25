@@ -1,4 +1,4 @@
-package Boards.Errors;
+package Boards.Exceptions;
 
 public class PlaceStringIncorrectException extends Exception {
     public PlaceStringIncorrectException(String errorMessage) {

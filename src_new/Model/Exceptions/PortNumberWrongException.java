@@ -1,4 +1,4 @@
-package Model.Errors;
+package Model.Exceptions;
 
 public class PortNumberWrongException extends Exception {
     public PortNumberWrongException(String errorMessage) {

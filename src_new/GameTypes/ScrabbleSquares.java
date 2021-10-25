@@ -1,9 +1,6 @@
 package GameTypes;
 
 import Boards.Square;
-import Handlers.LetterValueHandler;
-
-import java.util.ArrayList;
 
 public class ScrabbleSquares extends GameType {
 

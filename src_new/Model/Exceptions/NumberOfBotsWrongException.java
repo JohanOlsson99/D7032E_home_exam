@@ -1,4 +1,4 @@
-package Model.Errors;
+package Model.Exceptions;
 
 public class NumberOfBotsWrongException extends Exception {
     public NumberOfBotsWrongException(String errorMessage) {

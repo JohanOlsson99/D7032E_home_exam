@@ -1,9 +1,9 @@
 package Model;
 
-import Boards.Errors.WrongBoardSizeException;
-import Model.Errors.NumberOfBotsWrongException;
-import Model.Errors.NumberOfPlayerWrongException;
-import Model.Errors.PortNumberWrongException;
+import Boards.Exceptions.WrongBoardSizeException;
+import Model.Exceptions.NumberOfBotsWrongException;
+import Model.Exceptions.NumberOfPlayerWrongException;
+import Model.Exceptions.PortNumberWrongException;
 
 public class Settings {
     private static String language = "English";
@@ -13,6 +13,9 @@ public class Settings {
     private static int numOfPlayers = 1;
     private static int numOfBots = 1;
     private static int portNumber = 2048;
+
+    private Settings() {
+    }
 
     /**
      * 

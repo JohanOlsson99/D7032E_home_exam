@@ -1,10 +1,10 @@
 package Handlers;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashSet;
-
-import View.GameView;
 
 public class WordHandler {
     private HashSet<String> words;
@@ -32,8 +32,10 @@ public class WordHandler {
      * Read a file which should contain words, the wordHandler store these words
      * 
      * @param filePath filepath to words.txt
+     * @throws FileNotFoundException if the file words.txt was not found or error
+     *                               while reading it
      */
-    public void readFromFile(String filePath) {
+    public void readFromFile(String filePath) throws FileNotFoundException {
         this.words = new HashSet<String>();
         try {
             FileReader fileReader = new FileReader(filePath + "words.txt");
@@ -42,10 +44,10 @@ public class WordHandler {
             while ((line = bufferedReader.readLine()) != null) {
                 this.addWord(line.toUpperCase());
             }
-            // System.out.println(this.words.size());
+            fileReader.close();
             bufferedReader.close();
-        } catch (Exception e) {
-            GameView.getInstance().printErr(e.getMessage());
+        } catch (IOException e) {
+            throw new FileNotFoundException("The file words.txt not found");
         }
     }
 

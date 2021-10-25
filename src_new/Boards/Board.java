@@ -1,9 +1,10 @@
 package Boards;
 
-import Boards.Errors.*;
 import Handlers.LetterValueHandler;
 
 import java.io.Serializable;
+
+import Boards.Exceptions.*;
 
 public class Board implements Serializable {
 

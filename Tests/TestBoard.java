@@ -1,25 +1,26 @@
 import static org.junit.Assert.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.io.FileNotFoundException;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import Boards.Board;
-import Boards.Errors.LetterIncorrectException;
-import Boards.Errors.PlaceAlreadyTakenException;
-import Boards.Errors.PlaceStringIncorrectException;
-import Boards.Errors.WrongBoardSizeException;
 import Handlers.LetterValueHandler;
 import Boards.Square;
+import Boards.Exceptions.LetterIncorrectException;
+import Boards.Exceptions.PlaceAlreadyTakenException;
+import Boards.Exceptions.PlaceStringIncorrectException;
+import Boards.Exceptions.WrongBoardSizeException;
 
 
 public class TestBoard {
     LetterValueHandler letterHandler;
 
     @Before
-    public void init() {
+    public void init() throws FileNotFoundException {
         this.letterHandler = LetterValueHandler.getInstance();
-        this.letterHandler.readFromFile(System.getProperty("user.dir") + "\\data\\letter.txt");
+        this.letterHandler.readFromFile(TestBoardHandler.path);
     }
 
     private void fillBoard3x3(Board board) throws

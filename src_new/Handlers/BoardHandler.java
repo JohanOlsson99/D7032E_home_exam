@@ -1,6 +1,8 @@
 package Handlers;
 
 import Boards.Square;
+
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class BoardHandler {
@@ -12,8 +14,11 @@ public class BoardHandler {
      * 
      * @param wordFilePath   file path to words.txt
      * @param letterFilePath file path to letter.txt
+     * @throws java.io.FileNotFoundException if WordHandler or LetterValueHandler
+     *                                       didn't found the file they where
+     *                                       looking for
      */
-    public BoardHandler(String wordFilePath, String letterFilePath) {
+    public BoardHandler(String wordFilePath, String letterFilePath) throws FileNotFoundException {
         this.wordHandler = WordHandler.getInstance();
         this.wordHandler.readFromFile(wordFilePath);
         this.letterHandler = LetterValueHandler.getInstance();
