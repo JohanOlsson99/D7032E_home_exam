@@ -18,8 +18,13 @@ import Handlers.BoardHandler;
 
 public class TestBoardHandler {
     private BoardHandler boardHandler;
-    // public static String path = "C:\\Users\\Johan\\Documents\\skolan\\D7032_programvaruteknik\\D7032E_home_exam\\test\\data\\";
-    public static String path = "C:/Users/Johan/Documents/skolan/D7032_programvaruteknik/D7032E_home_exam/test/data/";
+    public static String path = "C:/Users/Johol/Documents/skolan/D7032E_software_engineering/D7032E_home_exam/test/data/";
+    // public static String path = "C:/Users/Johol/Documents/skolan/D7032E_software_engineering/D7032E_home_exam/test/data/";
+
+    /**
+     * Add you path here an uncomment the path string, add "test/data/", important with that last slash (/)
+     */
+    // public static String path = "[PATH TO ROOT FOLDER HERE]/test/data/";
 
     @Before
     public void init() throws FileNotFoundException {
