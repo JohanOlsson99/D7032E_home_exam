@@ -18,7 +18,8 @@ import Handlers.BoardHandler;
 
 public class TestBoardHandler {
     private BoardHandler boardHandler;
-    public static String path = "C:\\Users\\Johan\\Documents\\skolan\\D7032_programvaruteknik\\D7032E_home_exam\\tests\\data\\";
+    // public static String path = "C:\\Users\\Johan\\Documents\\skolan\\D7032_programvaruteknik\\D7032E_home_exam\\test\\data\\";
+    public static String path = "C:/Users/Johan/Documents/skolan/D7032_programvaruteknik/D7032E_home_exam/test/data/";
 
     @Before
     public void init() throws FileNotFoundException {

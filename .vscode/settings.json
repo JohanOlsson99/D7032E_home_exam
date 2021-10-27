@@ -2,7 +2,7 @@
     "java.project.sourcePaths": [
         "src",
         "src_old",
-        "tests",
+        "test",
     ],
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
