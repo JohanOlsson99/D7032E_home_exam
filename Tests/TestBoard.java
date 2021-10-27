@@ -23,7 +23,7 @@ public class TestBoard {
         this.letterHandler.readFromFile(TestBoardHandler.path);
     }
 
-    private void fillBoard3x3(Board board) throws
+    public void fillBoard3x3(Board board) throws
             IndexOutOfBoundsException,
             PlaceStringIncorrectException,
             PlaceAlreadyTakenException,
