@@ -12,25 +12,25 @@ import Boards.Exceptions.LetterIncorrectException;
 import Boards.Exceptions.PlaceAlreadyTakenException;
 import Boards.Exceptions.PlaceStringIncorrectException;
 import Boards.Exceptions.WrongBoardSizeException;
+import GameTypes.ScrabbleSquares;
+import GameTypes.StandardWordSquares;
 import Handlers.BoardHandler;
-import Handlers.WordHandler;
 
 public class TestBoardHandler {
     private BoardHandler boardHandler;
-    private WordHandler wordHandler;
-    public static String path = "C:\\Users\\Johol\\Documents\\skolan\\D7032E_software_engineering\\D7032E_home_exam\\Tests\\data\\";
+    public static String path = "C:\\Users\\Johan\\Documents\\skolan\\D7032_programvaruteknik\\D7032E_home_exam\\tests\\data\\";
 
     @Before
     public void init() throws FileNotFoundException {
-        this.boardHandler = new BoardHandler(this.path, this.path);
-        this.wordHandler = WordHandler.getInstance();
+        this.boardHandler = new BoardHandler(TestBoardHandler.path, TestBoardHandler.path);
     }
 
     public Board getBoard() throws WrongBoardSizeException {
         return new Board(3, 3);
     }
 
-    public void setBoard(Board board) throws IndexOutOfBoundsException, PlaceStringIncorrectException, PlaceAlreadyTakenException, LetterIncorrectException {
+    public void setBoard(Board board) throws IndexOutOfBoundsException, PlaceStringIncorrectException,
+            PlaceAlreadyTakenException, LetterIncorrectException {
         board.updateGameBoard('A', "a0");
         board.updateGameBoard('B', "a1");
         board.updateGameBoard('C', "a2");
@@ -41,8 +41,9 @@ public class TestBoardHandler {
         board.updateGameBoard('B', "c1");
         board.updateGameBoard('C', "c2");
     }
-    
-    public void setBoard2(Board board) throws IndexOutOfBoundsException, PlaceStringIncorrectException, PlaceAlreadyTakenException, LetterIncorrectException {
+
+    public void setBoard2(Board board) throws IndexOutOfBoundsException, PlaceStringIncorrectException,
+            PlaceAlreadyTakenException, LetterIncorrectException {
         board.updateGameBoard('A', "a0");
         board.updateGameBoard('C', "a1");
         board.updateGameBoard('A', "a2");
@@ -53,8 +54,9 @@ public class TestBoardHandler {
         board.updateGameBoard('C', "c1");
         board.updateGameBoard('C', "c2");
     }
-    
-    public void setBoard3(Board board) throws IndexOutOfBoundsException, PlaceStringIncorrectException, PlaceAlreadyTakenException, LetterIncorrectException {
+
+    public void setBoard3(Board board) throws IndexOutOfBoundsException, PlaceStringIncorrectException,
+            PlaceAlreadyTakenException, LetterIncorrectException {
         board.updateGameBoard('C', "a0");
         board.updateGameBoard('B', "a1");
         board.updateGameBoard('A', "a2");
@@ -67,13 +69,14 @@ public class TestBoardHandler {
     }
 
     @Test
-    public void testFindWords() throws IndexOutOfBoundsException, PlaceStringIncorrectException, PlaceAlreadyTakenException, LetterIncorrectException, WrongBoardSizeException {
+    public void testFindWords() throws IndexOutOfBoundsException, PlaceStringIncorrectException,
+            PlaceAlreadyTakenException, LetterIncorrectException, WrongBoardSizeException {
         /*
-        A B C
-        A B C
-        A B C
-        words: ABC: 4, AB: 5, BC: 5
-        */
+         * A B C
+         * A B C 
+         * A B C 
+         * words: ABC: 4, AB: 5, BC: 5
+         */
         Board board = this.getBoard();
         this.setBoard(board);
         ArrayList<Square[]> words = this.boardHandler.findAllWords(board.getGameBoard());
@@ -81,30 +84,50 @@ public class TestBoardHandler {
     }
 
     @Test
-    public void testFindWords2() throws IndexOutOfBoundsException, PlaceStringIncorrectException, PlaceAlreadyTakenException, LetterIncorrectException, WrongBoardSizeException {
+    public void testFindWords2() throws IndexOutOfBoundsException, PlaceStringIncorrectException,
+            PlaceAlreadyTakenException, LetterIncorrectException, WrongBoardSizeException {
         /*
-        A C A
-        A C B
-        A C C
-        words: ABC: 1, AB: 1, BC: 1
-        */
+         * A C A 
+         * A C B 
+         * A C C 
+         * words: ABC: 1, AB: 1, BC: 1
+         */
         Board board = this.getBoard();
         this.setBoard2(board);
         ArrayList<Square[]> words = this.boardHandler.findAllWords(board.getGameBoard());
         assertEquals(3, words.size());
     }
-    
+
     @Test
-    public void testFindWords3() throws IndexOutOfBoundsException, PlaceStringIncorrectException, PlaceAlreadyTakenException, LetterIncorrectException, WrongBoardSizeException {
+    public void testFindWords3() throws IndexOutOfBoundsException, PlaceStringIncorrectException,
+            PlaceAlreadyTakenException, LetterIncorrectException, WrongBoardSizeException {
         /*
-        C B A
-        C B A
-        C B A
-        words: 0
-        */
+         * C B A 
+         * C B A 
+         * C B A 
+         * words: 0
+         */
         Board board = this.getBoard();
         this.setBoard3(board);
         ArrayList<Square[]> words = this.boardHandler.findAllWords(board.getGameBoard());
         assertEquals(0, words.size());
+    }
+
+    @Test
+    public void testCalculateScore() throws IndexOutOfBoundsException, PlaceStringIncorrectException, PlaceAlreadyTakenException, LetterIncorrectException, WrongBoardSizeException {
+        Board board = this.getBoard();
+        this.setBoard2(board);
+        ArrayList<Square[]> words = this.boardHandler.findAllWords(board.getGameBoard());
+        StandardWordSquares type = new StandardWordSquares(0);
+        assertEquals(1, type.getPoints(words));
+    }
+    
+    @Test
+    public void testCalculateScore2() throws IndexOutOfBoundsException, PlaceStringIncorrectException, PlaceAlreadyTakenException, LetterIncorrectException, WrongBoardSizeException {
+        Board board = this.getBoard();
+        this.setBoard2(board);
+        ArrayList<Square[]> words = this.boardHandler.findAllWords(board.getGameBoard());
+        ScrabbleSquares type = new ScrabbleSquares(0);
+        assertEquals(21, type.getPoints(words));
     }
 }

@@ -47,8 +47,7 @@ public class Game {
         try {
             this.boardHandler = new BoardHandler(this.path, this.path);
         } catch (FileNotFoundException e) {
-            this.gameView.printErr(e.getMessage());
-            this.mainMenu();
+            handelError(e.getMessage());
             return;
         }
 
@@ -100,9 +99,8 @@ public class Game {
         try {
             this.gameRunner.run(players, thisPlayer);
         } catch (PlayerDisconnectedException e) {
-            this.gameView.printErr(e.getMessage());
             this.closeConnections(players);
-            this.mainMenu();
+            handelError(e.getMessage());
             return;
         }
         this.calculateAndSendWinningMessage(players, thisPlayer);
@@ -214,8 +212,8 @@ public class Game {
     }
 
     private void loadLanguage() {
-        this.path = System.getProperty("user.dir") + "\\data\\" + Settings.getLanguage() + "\\";
-        this.gameController = new GameController(this.path + "menu\\", this.path + "menu\\");
+        this.path = System.getProperty("user.dir") + "/data/" + Settings.getLanguage() + "/";
+        this.gameController = new GameController(this.path + "menu/", this.path + "menu/");
         this.gameView = GameView.getInstance();
     }
 
@@ -240,7 +238,8 @@ public class Game {
                 Settings.setRowSize(5);
                 Settings.setColSize(5);
             } catch (WrongBoardSizeException e) {
-                // Nothing wrong with these values
+                // Nothing wrong with these values if gets here exit the program
+                System.exit(0);
             }
             this.gameType = new ScrabbleSquares(GameType.BOARD_PRE_DEFINED);
             this.initGame();
@@ -251,7 +250,8 @@ public class Game {
                 Settings.setRowSize(5);
                 Settings.setColSize(5);
             } catch (WrongBoardSizeException e) {
-                // Nothing wrong with these values
+                // Nothing wrong with these values if gets here exit the program
+                System.exit(0);
             }
             this.gameType = new ScrabbleSquares(GameType.BOARD_RANDOM);
             this.initGame();
@@ -261,8 +261,7 @@ public class Game {
             try {
                 player = this.connectToServer();
             } catch (ServerConnectionFailedException e) {
-                this.gameView.printErr(e.getMessage());
-                this.mainMenu();
+                this.handelError(e.getMessage());
                 return;
             }
             try {
@@ -369,7 +368,7 @@ public class Game {
     }
 
     private void setLanguage() {
-        File folder = new File(System.getProperty("user.dir") + "\\data\\");
+        File folder = new File(System.getProperty("user.dir") + "/data/");
         File[] listOfFiles = folder.listFiles();
 
         ArrayList<String> foldersList = new ArrayList<String>();
@@ -386,7 +385,7 @@ public class Game {
                 }
             }
         }
-        this.gameView.print(folders + "\n exit with !");
+        this.gameView.print(folders + "\nexit with !");
         while (true) {
             String input = this.gameController.getInput();
             if (input.equals("!")) {

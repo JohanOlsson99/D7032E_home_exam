@@ -6,6 +6,41 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch Main",
+            "request": "launch",
+            "mainClass": "Main",
+            "projectName": "D7032E_home_exam_38ad042b"
+        },
+        {
+            "type": "java",
+            "name": "Launch Test",
+            "request": "launch",
+            "mainClass": "Test",
+            "projectName": "D7032E_home_exam_38ad042b"
+        },
+        {
+            "type": "java",
+            "name": "Launch Game",
+            "request": "launch",
+            "mainClass": "Model.Game",
+            "projectName": "D7032E_home_exam_38ad042b"
+        },
+        {
+            "type": "java",
+            "name": "Launch VarietyWordSquares",
+            "request": "launch",
+            "mainClass": "VarietyWordSquares",
+            "projectName": "D7032E_home_exam_38ad042b"
+        },
+        {
+            "type": "java",
+            "name": "Launch Game",
+            "request": "launch",
+            "mainClass": "Game",
+            "projectName": "D7032E_home_exam_38ad042b"
+        },
+        {
+            "type": "java",
             "name": "Launch BoardHandler",
             "request": "launch",
             "mainClass": "Handlers.BoardHandler",

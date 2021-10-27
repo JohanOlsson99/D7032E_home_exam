@@ -1,11 +1,10 @@
 {
     "java.project.sourcePaths": [
         "src",
-        "src_new",
-        "Tests"
+        "src_old",
+        "tests",
     ],
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
-        "C:\\Users\\Johan\\Documents\\skolan\\D7032_programvaruteknik\\D7032E_home_exam\\lib\\junit-platform-console-standalone-1.7.0-M1.jar"
     ]
 }
