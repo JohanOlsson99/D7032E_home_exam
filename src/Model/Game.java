@@ -277,6 +277,7 @@ public class Game {
             this.settingsMenu();
             break;
         case "!":
+            System.exit(0);
             break;
         default:
             this.mainMenu();
@@ -348,7 +349,6 @@ public class Game {
                 Settings.setPortNumber(port);
             } catch (PortNumberWrongException e) {
                 this.gameView.printErr(e.getMessage());
-                this.settingsMenu();
             }
             this.settingsMenu();
             break;
